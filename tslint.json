@@ -1,0 +1,8 @@
+{
+  "defaultSeverity": "warning",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rules": {
+    "prettier": true,
+    "no-console": false
+  }
+}
