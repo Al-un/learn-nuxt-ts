@@ -1,0 +1,13 @@
+{
+  "extends": "@nuxt/typescript",
+
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["@types/node", "@nuxt/vue-app"],
+    "experimentalDecorators": true,
+    "paths": {
+      "@/*": ["*"],
+      "~/*": ["*"]
+    }
+  }
+}
