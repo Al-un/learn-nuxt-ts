@@ -2,16 +2,13 @@
   <section class="container">
     <div>
       <logo/>
-      <h1 class="title">games</h1>
-      <h2 class="subtitle">Games to learn, Games for fun</h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green anotherdummyclass"
-        >Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
+
+      <h3>Testing Vuex</h3>
+      <div>
+        {{ count }} (square: {{ square }})
+        <button @click="increment">Increment</button>
       </div>
+
       <h3>From ts classes:</h3>
       <p>{{ val }}</p>
       <p>{{ text }}</p>
@@ -22,6 +19,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import Logo from '@/components/Logo.vue';
 import SomeClass from '@/lib/some.class';
 import AnotherClass from '@/lib/another.class';
@@ -29,6 +27,13 @@ import AnotherClass from '@/lib/another.class';
 @Component({
   components: {
     Logo
+  },
+  computed: {
+    ...mapState('counter', ['count']),
+    ...mapGetters('counter', ['square'])
+  },
+  methods: {
+    ...mapActions('counter', ['increment'])
   }
 })
 export default class Index extends Vue {

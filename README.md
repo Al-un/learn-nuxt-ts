@@ -371,3 +371,126 @@ export default Vue.extend({
 ```
 
 But I have an error: `TypeError: Cannot read property 'extend' of undefined`
+
+### Vuex
+
+Our app would feel lonely without a store. Let's add Vuex. I am pretty new with
+TypeScript in Vuex so I am discovering in real time :D
+
+I mainly rely on [this article](https://codeburst.io/vuex-and-typescript-3427ba78cfa8)
+
+To simulate a real life application, I created a _counter_ modules with split files:
+
+```
+- store
+  - counter
+    - actions.ts
+    - getters.ts
+    - mutations.ts
+    - state.ts
+    - types.ts
+```
+
+For more details regarding Vuex in Nuxt, please check [Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
+
+```ts
+// actions.ts
+import { ActionContext, ActionTree } from 'vuex/types';
+import { CounterState, RootState } from './types';
+
+const actions: ActionTree<CounterState, RootState> = {
+  increment: ({ commit }: ActionContext<CounterState, RootState>) => {
+    // Do more business logic here
+
+    // we commit something at the end
+    commit('increment');
+  }
+};
+
+export default actions;
+
+// getters.ts
+import { GetterTree } from 'vuex';
+import { CounterState } from './types';
+
+const getters: GetterTree<CounterState, CounterState> = {
+  // Completely useless and irrelevant getter but I needed some getter ^^
+  square: (state): number => state.count * state.count
+};
+
+export default getters;
+
+// mutations.ts
+import { MutationTree } from 'vuex';
+import { CounterState } from './types';
+
+const mutations: MutationTree<CounterState> = {
+  // Here, state type "CounterState" can be omitted because already handled
+  // by the generic in MutationTree<X>
+  increment: (state: CounterState) => {
+    state.count++;
+  }
+};
+
+export default mutations;
+
+// state.ts
+import { RootState } from './types';
+
+// By Nuxt conventation, states must export a default function
+export default (): RootState => ({
+  count: 0
+});
+
+// types.ts
+export interface CounterState extends RootState {
+  // Not used, simulating a value which is not initialised
+  clickCount: number;
+}
+
+export interface RootState {
+  count: number;
+}
+```
+
+Now let's use our store in our index Page:
+
+```html
+<!-- Template -->
+<template>
+  <section class="container">
+    <div>
+      <logo />
+
+      <h3>Testing Vuex</h3>
+      <div>
+        {{ count }} (square: {{ square }})
+        <button @click="increment">Increment</button>
+      </div>
+      <div />
+    </div>
+  </section>
+</template>
+```
+
+```ts
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { mapState, mapActions, mapGetters } from 'vuex';
+import Logo from '@/components/Logo.vue';
+
+@Component({
+  components: {
+    Logo
+  },
+  computed: {
+    ...mapState('counter', ['count']),
+    ...mapGetters('counter', ['square'])
+  },
+  methods: {
+    ...mapActions('counter', ['increment'])
+  }
+})
+export default class Index extends Vue {}
+</script>
+```
