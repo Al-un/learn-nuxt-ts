@@ -1,13 +1,17 @@
 {
   "extends": "@nuxt/typescript",
+  "types": ["@types/node", "@nuxt/vue-app", "@types/jest"],
 
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["@types/node", "@nuxt/vue-app"],
     "experimentalDecorators": true,
     "paths": {
       "@/*": ["*"],
       "~/*": ["*"]
     }
-  }
+  },
+
+  "include": ["**/*.ts", "**/*.vue"],
+  "exclude": ["node_modules"],
+  "files": ["ts-shim.d.ts"]
 }

@@ -1,14 +1,15 @@
 {
-  "name": "games",
+  "name": "nuxt-ts",
   "version": "1.0.0",
-  "description": "Games to learn, Games for fun",
+  "description": "Testing TS in Nuxt",
   "author": "Al-un",
   "private": true,
   "scripts": {
     "dev": "nuxt-ts",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
-    "generate": "nuxt-ts generate"
+    "generate": "nuxt-ts generate",
+    "test": "jest"
   },
   "dependencies": {
     "cross-env": "^5.2.0",
@@ -17,9 +18,16 @@
     "vue-property-decorator": "^7.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@types/jest": "^24.0.5",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-core": "^7.0.0-bridge.0",
+    "jest": "^24.1.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.18.0"
+    "tslint-config-prettier": "^1.18.0",
+    "vue-jest": "^3.0.3"
   }
 }
