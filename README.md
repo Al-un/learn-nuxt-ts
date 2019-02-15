@@ -111,8 +111,6 @@ export default class Index extends Vue {}
 
 At that stage, your `yarn serve` should run without issue
 
-> In my case, `@/components/Logo.vue` raised
-
 To ensure that TypeScript classes works properly, I have created a `lib/` folder
 with a `dummy.js` file:
 
