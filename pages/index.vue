@@ -5,7 +5,8 @@
 
       <h3>Testing Vuex</h3>
       <div>
-        {{ count }} (square: {{ square }})
+        <span class="count">{{ count }}</span>
+        <span class="square">(square: {{ square }})</span>
         <button @click="increment">Increment</button>
       </div>
 
