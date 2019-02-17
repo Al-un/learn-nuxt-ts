@@ -2,7 +2,8 @@
   "defaultSeverity": "warning",
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
-    "prettier": true,
-    "no-console": false
+    "no-console": false,
+    // https://github.com/palantir/tslint/issues/3265#issuecomment-389624017
+    "interface-name": [true, "never-prefix"]
   }
 }

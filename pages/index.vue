@@ -38,8 +38,8 @@ import AnotherClass from '@/lib/another.class';
   }
 })
 export default class Index extends Vue {
-  val: Number = 0;
-  text: String = '';
+  val: number = 0;
+  text: string = '';
 
   mounted() {
     const some = new SomeClass();

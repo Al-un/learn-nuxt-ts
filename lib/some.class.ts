@@ -5,7 +5,7 @@ export default class SomeClass {
     // console.log('SomeClass constructor called');
   }
 
-  public moarValue(): Number {
+  public moarValue(): number {
     return this.value + 2;
   }
 }

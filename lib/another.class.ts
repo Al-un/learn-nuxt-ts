@@ -1,7 +1,7 @@
 export default class AnotherClass {
   public text = 'text';
 
-  public moarText(): String {
+  public moarText(): string {
     return 'moar ' + this.text;
   }
 }
