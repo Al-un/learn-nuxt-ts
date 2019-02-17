@@ -10,8 +10,10 @@ Testing some TypeScript in Nuxt. Objective is to have:
 
 ## Getting started
 
+If you prefer to skip the tutorial and start from present version of this repository
+
 ```sh
-# dependencies
+# install dependencies
 yarn install
 
 # test
@@ -25,21 +27,27 @@ yarn dev
 
 ### Project setup
 
-Initialise a nuxt with minimal configuration. I use _yarn_ as package manager
+Initialise a nuxt with minimal configuration with _yarn_ as package manager. I
+chose the minimal configuration (no plugin, no style library, etc) so that I can
+see in _package.json_ what need to be added to be TypeScript compliant.
 
 ```sh
-yarn create nuxt-app games
+yarn create nuxt-app {your project name}
 ```
 
 More information on [Nuxt getting started page](https://nuxtjs.org/guide/installation)
 
-### Adding Typescript
+### Typescript
 
-Add TypeScript. Following [Nuxt 2.4.0 release](https://dev.to/nuxt/nuxtjs-v240-is-out-typescript-smart-prefetching-and-more-18d),
+Following [Nuxt 2.4.0 release](https://dev.to/nuxt/nuxtjs-v240-is-out-typescript-smart-prefetching-and-more-18d),
 I want to try `nuxt-ts`. I mainly rely on the two following links:
 
 - https://codesandbox.io/s/github/nuxt/nuxt.js/tree/dev/examples/typescript
 - https://github.com/nuxt-community/hackernews-nuxt-ts
+
+#### Add TypeScript to project
+
+Add `nuxt-ts` (TypeScript alter ego of `nuxt`) and `vue-property-decorator.`
 
 ```sh
 yarn add nuxt-ts
@@ -47,7 +55,6 @@ yarn add --dev vue-property-decorator
 ```
 
 > Note: I will not use [class based components](https://vuejs.org/v2/guide/typescript.html#Class-Style-Vue-Components)
-> If you try it, please let me know if there is any issue :)
 
 Change `nuxt` to `nuxt-ts` in _package.json_ scripts:
 
@@ -85,18 +92,23 @@ Configure _tsconfig.json_:
   I am using Nuxt default configuration meaning that my `srcDir` is my `rootDir`.
   Feel free to add the `@@` and `~~` aliases if required
 
-  **edit for VS Code users**: VS Code rocks with thoses aliases! Don't forget
-  to reload your window to have it taking effect. Source:
-  https://medium.com/@caludio/how-to-use-module-path-aliases-in-visual-studio-typescript-and-javascript-e7851df8eeaa
+  **VS Code users**: [VS Code rocks with thoses aliases!](https://medium.com/@caludio/how-to-use-module-path-aliases-in-visual-studio-typescript-and-javascript-e7851df8eeaa)
+  Don't forget to:
+
+  - reload your window to have it taking effect
+  - Vue file needs to have extension: `import MyComponent from '@/components/MyComponent.vue';`
+  - Ensure that `"baseUrl": "."` so that `"@/*": ["*"]` points to proper root folder
 
 - `extends` and `types` are taken from the mentioned repositories
+
+#### Update existing code
 
 Update _pages/index.vue_:
 
 ```ts
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Logo from "../components/Logo.vue";
+import Logo from "@/components/Logo.vue";
 
 @Component({
   components: {
@@ -109,12 +121,13 @@ export default class Index extends Vue {}
 
 > Ensure that `lang="ts"` is added to the `script` tag
 
-At that stage, your `yarn serve` should run without issue
+At that stage, your `yarn serve` should run without issue.
 
 To ensure that TypeScript classes works properly, I have created a `lib/` folder
-with a `dummy.js` file:
+with a `dummy.ts` file:
 
 ```ts
+// lib/dummy.ts
 export class SomeClass {
   value = 4;
 
@@ -122,7 +135,7 @@ export class SomeClass {
     console.log('SomeClass constructor called');
   }
 
-  moarValue(): Number {
+  moarValue(): number {
     return this.value + 2;
   }
 }
@@ -130,22 +143,68 @@ export class SomeClass {
 export class AnotherClass {
   text = 'text';
 
-  moarText(): String {
+  moarText(): string {
     return 'moar ' + this.text;
   }
 }
 ```
 
-TSLint will later tell me:
+TSLint will later tell me to split one class per file and to add property and
+methods scopes
 
-- split one class per file
-- add property and methods scopes
+Use those classes in the home page (_pages/index.vue_):
+
+```html
+<template>
+  <section class="container">
+    <div>
+      <logo />
+      <h3>Testing values from TypeScript classes:</h3>
+      <p>{{ val }}</p>
+      <p>{{ text }}</p>
+      <div />
+    </div>
+  </section>
+</template>
+```
+
+```ts
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import Logo from '@/components/Logo.vue';
+import  { SomeClass, AnotherClass } from '@/lib/dummy'; //.ts extension can be omitted
+
+@Component({
+  components: {
+    Logo
+  }
+})
+export default class Index extends Vue {
+  val: number = 0;
+  text: string = '';
+
+  mounted() {
+    const some = new SomeClass();
+    some.value = 42;
+    const anot = new AnotherClass();
+    this.val = some.moarValue(); // should return 42+2=44 instead of 4+2=6
+    this.text = anot.moarText();
+  }
+}
+</script>
+```
 
 ### Adding Prettier & Tslint
+
+[Prettier](https://prettier.io) is an opinionated formatter commonly used with
+its Linter friend [TSLint](https://palantir.github.io/tslint/).
 
 ```sh
 yarn add --dev prettier tslint tslint-config-prettier
 ```
+
+#### Prettier configuration
 
 Add prettier configuration via a _.prettierrc_ file. Options can be found on
 [Prettier documentation](https://prettier.io/docs/en/options.html):
@@ -157,31 +216,45 @@ Add prettier configuration via a _.prettierrc_ file. Options can be found on
 }
 ```
 
-Add TSLint configuration via a _tslint.json_ file. More information on [TSLint](https://palantir.github.io/tslint/):
+#### TSLint configuration
+
+Add TSLint configuration via a _tslint.json_ file:
 
 ```json
 {
   "defaultSeverity": "warning",
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
-    "prettier": true,
     "no-console": false
   }
 }
 ```
 
-Mainly from [Hackernew-nuxt-ts _tslint.json_](https://github.com/nuxt-community/hackernews-nuxt-ts/blob/master/tslint.json).
+Those configuration are mainly taken from
+[Hackernew-nuxt-ts _tslint.json_](https://github.com/nuxt-community/hackernews-nuxt-ts/blob/master/tslint.json).
 
-> Please note that _dummy.ts_ has been split into _another.class.ts_ and
-> _some.class.ts_ as TypeScript recommends one class per file.
+#### Code
 
-### Adding Jest
+As said earlier, TSLint now complains about my way of writing code. To please it,
+I had to:
+
+- Add scope on properties and methods
+- Split _dummy.ts_ into _another.class.ts_ and _some.class.ts_ as TypeScript recommends one class per file.
+- Organize import by alphabetical orders
+- Use TypeScript types (`number` instead of `Number`, `string` instead of `String`, etc)
+- Add / Update types in JSDocs as well
+
+### Testing
+
+#### Adding Jest
 
 Time to test components with Jest:
 
 ```sh
 yarn add --dev jest vue-jest @vue/test-utils ts-jest @types/jest
 ```
+
+Here are what we are adding:
 
 - [`jest`](https://jestjs.io/) is our test runner
 - [`vue-jest`](https://github.com/vuejs/vue-jest) is to convert our _\*.vue_ files for Jest
@@ -213,7 +286,9 @@ Add a `test` script in _package.json_:
 }
 ```
 
-Time to write tests in the `tests/` folder:
+#### Testing plain TypeScript
+
+Let's create a `tests/` folder and write our first tests:
 
 - _another.class.spec.ts_:
 
@@ -276,8 +351,11 @@ module.exports = {
 };
 ```
 
-Now `yarn test` should validate your pure TypeScript classes. Time to jump into Vue testing.
-Let's try to test the Logo components. In _tests/components/logo.spec.ts_:
+Now `yarn test` should validate your pure TypeScript classes.
+
+#### Testing Vue components
+
+Time to jump into Vue testing. Let's try to test the Logo components. In _tests/components/logo.spec.ts_:
 
 ```ts
 import Logo from '@/components/logo.vue';
@@ -357,7 +435,7 @@ export default class Logo extends Vue {}
 </script>
 ```
 
-I tried this approach:
+I also tried this approach:
 
 ```ts
 <script lang="ts">
@@ -368,16 +446,26 @@ export default Vue.extend({
 </script>
 ```
 
-But I have an error: `TypeError: Cannot read property 'extend' of undefined`
+But I have the error `TypeError: Cannot read property 'extend' of undefined`
+when running `yarn test`. I have no problem when running `yarn dev`.
+
+> Self TODO:
+>
+> - How to use `Vue.extend` syntax
+> - How about official [`vue-class-component`](https://github.com/vuejs/vue-class-component)
 
 ### Vuex
 
 Our app would feel lonely without a store. Let's add Vuex. I am pretty new with
 TypeScript in Vuex so I am discovering in real time :D
+[This article](https://codeburst.io/vuex-and-typescript-3427ba78cfa8) is my guide.
 
-I mainly rely on [this article](https://codeburst.io/vuex-and-typescript-3427ba78cfa8)
+#### Store definition
 
-To simulate a real life application, I created a _counter_ modules with split files:
+To simulate a real life application, let's use Vuex modules.
+[More about Vuex modules here](https://vuex.vuejs.org/guide/modules.html)
+
+I created a _counter_ modules with split files:
 
 ```
 - store
@@ -389,7 +477,9 @@ To simulate a real life application, I created a _counter_ modules with split fi
     - types.ts
 ```
 
-For more details regarding Vuex in Nuxt, please check [Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
+`type.ts` will defined types specific to the store. Other files are following Nuxt
+standards. For more details regarding Vuex in Nuxt, please check
+[Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
 
 ```ts
 // actions.ts
@@ -451,10 +541,11 @@ export interface RootState {
 }
 ```
 
-Now let's use our store in our index Page:
+#### Store usage
+
+Now let's use our store in our home page (_pages/index.vue_):
 
 ```html
-<!-- Template -->
 <template>
   <section class="container">
     <div>
@@ -465,7 +556,6 @@ Now let's use our store in our index Page:
         {{ count }} (square: {{ square }})
         <button @click="increment">Increment</button>
       </div>
-      <div />
     </div>
   </section>
 </template>
@@ -492,3 +582,104 @@ import Logo from '@/components/Logo.vue';
 export default class Index extends Vue {}
 </script>
 ```
+
+Now, `yarn dev` should deploy smoothly. However, `yarn test` fails because the
+store is not defined in our test.
+
+#### Test update
+
+Our index page tests need some updates. Before that, let's change a bit our
+template for testing purpose:
+
+```html
+<template>
+  <section class="container">
+    <div>
+      <logo />
+
+      <h3>Testing Vuex</h3>
+      <div>
+        <span class="count">{{ count }}</span>
+        <span class="square">(square: {{ square }})</span>
+        <button @click="increment">Increment</button>
+      </div>
+    </div>
+  </section>
+</template>
+```
+
+Adding `span` and CSS classes help us to identify `{{ count }}` and `{{ square }}`.
+
+Vuex testing requires two steps
+(read more about [Vuex testing on `vue-test-utils` documentation](https://vue-test-utils.vuejs.org/guides/#testing-vuex-in-components)):
+
+1. Store mocking
+2. Component tests
+
+```ts
+import IndexPage from '@/pages/index.vue';
+import { CounterState } from '@/store/counter/types';
+import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import Vuex, { Store } from 'vuex';
+
+// Define variables for testing
+const localVue = createLocalVue();
+localVue.use(Vuex);
+let mockStore: Store<CounterState>;
+let wrapper: Wrapper<IndexPage>;
+
+// Mocking increment function
+const increment = jest.fn();
+
+describe('HomePage', () => {
+  beforeEach(() => {
+    // Mocking our store
+    mockStore = new Vuex.Store({
+      modules: {
+        counter: {
+          // mocking actions requires mocked functions to check if they were
+          // called, with which arguments etc
+          actions: {
+            increment
+          },
+          // We are not testing the square getter here so we can just return
+          // any number
+          getters: {
+            square: () => 5
+          },
+          // In Nuxt, all modules are namespaced
+          namespaced: true,
+          // initial state
+          state: {
+            count: 0
+          }
+        }
+      }
+    });
+
+    wrapper = shallowMount(IndexPage, { store: mockStore, localVue });
+  });
+
+  test('is a Vue component', () => {
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
+
+  test('is linked to counter state', () => {
+    const count = wrapper.find('.count');
+    expect(count.text()).toBe('0');
+  });
+
+  test('is linked to counter state getter', () => {
+    const square = wrapper.find('.square');
+    expect(square.text()).toBe(`(square: ${5})`);
+  });
+
+  test('increments when clicking button', () => {
+    const btn = wrapper.find('button');
+    btn.trigger('click');
+    expect(increment).toHaveBeenCalled();
+  });
+});
+```
+
+And tadaa!
