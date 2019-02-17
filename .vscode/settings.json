@@ -1,0 +1,4 @@
+{
+  // Use local typescript to ensure version
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}
