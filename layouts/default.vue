@@ -8,6 +8,14 @@ html {
     Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
+  height: 100%;
+  background: linear-gradient(to right bottom, #42b883 25%, #35495e 75%);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
 button {

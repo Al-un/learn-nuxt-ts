@@ -32,28 +32,29 @@ section {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 0px 0px 1rem;
+  /* colors */
+  background: #fefefe;
   /* borders */
-  border: 1px solid seagreen;
-  border-radius: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
   /* text */
   text-align: center;
 }
 section > h2 {
   /* position */
   position: relative;
-  margin-top: -20px;
+  margin: 0px 0px 20px;
   /* colors */
-  background: white;
+  background: #009688;
+  color: #F9FBE7;
   /* sizing */
   box-sizing: border-box;
-  width: 90%;
-  max-width: 300px;
+  width: 100%;
   height: 40px;
   padding-left: 1rem;
-  margin-left: 5%;
   /* borders */
-  border: 1px solid seagreen;
-  border-radius: 6px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   /* text */
   font-size: 20px;
   font-weight: 600;
