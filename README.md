@@ -1,12 +1,29 @@
 # Nuxt-TS
 
-Testing some TypeScript in Nuxt. Objective is to have:
+[Nuxt 2.4.0 release](https://dev.to/nuxt/nuxtjs-v240-is-out-typescript-smart-prefetching-and-more-18d)
+has pushed one step forward TypeScript integration into Nuxt. **Kudos to Nuxt team**.
+I wanted to give `nuxt-ts` a try. As a Nuxt beginner, I had to go beyond a simple
+_Helloworld_. Consequently, part of this tutorial might not directly linked to
+TypeScript in Nuxt.
+
+To achieve a minimal application, I plan to gather:
 
 - Nuxt
 - TypeScript
 - Linter and Prettier
 - Jest
 - Vuex
+
+## Updates
+
+- _16-Feb-2019_: initialisation
+- _18-Feb-2019_: update to meet Nuxt standards (logic moved at components level and
+  each component is tested)
+
+## TODO
+
+- Axios
+- TSLint vue files in VS Code
 
 ## Getting started
 
@@ -35,12 +52,11 @@ see in _package.json_ what need to be added to be TypeScript compliant.
 yarn create nuxt-app {your project name}
 ```
 
-More information on [Nuxt getting started page](https://nuxtjs.org/guide/installation)
+More information about [Nuxt application creation on getting started page](https://nuxtjs.org/guide/installation)
 
 ### Typescript
 
-Following [Nuxt 2.4.0 release](https://dev.to/nuxt/nuxtjs-v240-is-out-typescript-smart-prefetching-and-more-18d),
-I want to try `nuxt-ts`. I mainly rely on the two following links:
+I mainly rely on the two following links:
 
 - https://codesandbox.io/s/github/nuxt/nuxt.js/tree/dev/examples/typescript
 - https://github.com/nuxt-community/hackernews-nuxt-ts
@@ -53,8 +69,6 @@ Add `nuxt-ts` (TypeScript alter ego of `nuxt`) and `vue-property-decorator.`
 yarn add nuxt-ts
 yarn add --dev vue-property-decorator
 ```
-
-> Note: I will not use [class based components](https://vuejs.org/v2/guide/typescript.html#Class-Style-Vue-Components)
 
 Change `nuxt` to `nuxt-ts` in _package.json_ scripts:
 
@@ -103,12 +117,23 @@ Configure _tsconfig.json_:
 
 #### Update existing code
 
-Update _pages/index.vue_:
+Nuxt CLI provides a _Logo_ component and an _Index_ page. So far, only the _Index_ page
+has a `<script>` tag so it is the only part to migrate to TypeScript. I also
+refactored a bit the template:
 
-```ts
+```vue
+<template>
+  <div>
+    <component-wrapper title="logo">
+      <logo />
+    </component-wrapper>
+  </div>
+</template>
+
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Logo from "@/components/Logo.vue";
+import { Component, Vue } from 'vue-property-decorator';
+
+import Logo from '@/components/Logo.vue';
 
 @Component({
   components: {
@@ -119,9 +144,10 @@ export default class Index extends Vue {}
 </script>
 ```
 
-> Ensure that `lang="ts"` is added to the `script` tag
-
-At that stage, your `yarn serve` should run without issue.
+- Ensure that `lang="ts"` is added to the `script` tag
+- At that stage, your `yarn serve` should run without issue.
+- `component-wrapper` is not relevant to this tutorial and only serves aesthetic
+  purpose. Please check the code [here](https://github.com/Al-un/nuxt-ts/blob/master/components/ComponentWrapper.vue)
 
 To ensure that TypeScript classes works properly, I have created a `lib/` folder
 with a `dummy.ts` file:
@@ -149,42 +175,30 @@ export class AnotherClass {
 }
 ```
 
-TSLint will later tell me to split one class per file and to add property and
-methods scopes
+To use those classes, create a _TypescriptClass_ component (_components/TypescriptClass.vue_):
 
-Use those classes in the home page (_pages/index.vue_):
-
-```html
+```vue
 <template>
-  <section class="container">
-    <div>
-      <logo />
-      <h3>Testing values from TypeScript classes:</h3>
-      <p>{{ val }}</p>
-      <p>{{ text }}</p>
-      <div />
-    </div>
-  </section>
+  <div>
+    <p class="some-class">{{ val }}</p>
+    <p class="another-class">{{ text }}</p>
+  </div>
 </template>
-```
-
-```ts
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Logo from '@/components/Logo.vue';
-import  { SomeClass, AnotherClass } from '@/lib/dummy'; //.ts extension can be omitted
+
+import AnotherClass from '@/lib/another.class';
+import SomeClass from '@/lib/some.class';
 
 @Component({
-  components: {
-    Logo
-  }
+  name: 'TypescriptClass'
 })
-export default class Index extends Vue {
-  val: number = 0;
-  text: string = '';
+export default class TypescriptClass extends Vue {
+  public val: number = 0;
+  public text: string = '';
 
-  mounted() {
+  public mounted() {
     const some = new SomeClass();
     some.value = 42;
     const anot = new AnotherClass();
@@ -192,6 +206,37 @@ export default class Index extends Vue {
     this.text = anot.moarText();
   }
 }
+</script>
+```
+
+TypescriptClass component can then be added in our home page (_pages/index.vue_):
+
+```vue
+<template>
+  <div>
+    <component-wrapper title="logo">
+      <logo />
+    </component-wrapper>
+
+    <component-wrapper title="Typescript classes">
+      <typescript-class />
+    </component-wrapper>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+import Logo from '@/components/Logo.vue';
+import TypescriptClass from '@/components/TypescriptClass.vue';
+
+@Component({
+  components: {
+    Logo,
+    TypescriptClass
+  }
+})
+export default class Index extends Vue {}
 </script>
 ```
 
@@ -225,7 +270,8 @@ Add TSLint configuration via a _tslint.json_ file:
   "defaultSeverity": "warning",
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
-    "no-console": false
+    "no-console": false,
+    "interface-name": [true, "never-prefix"]
   }
 }
 ```
@@ -233,14 +279,20 @@ Add TSLint configuration via a _tslint.json_ file:
 Those configuration are mainly taken from
 [Hackernew-nuxt-ts _tslint.json_](https://github.com/nuxt-community/hackernews-nuxt-ts/blob/master/tslint.json).
 
+_Note_: I do not want to prefix my interfaces name with a capitilised "I" hence
+the `interface-name` rule.
+
 #### Code
 
-As said earlier, TSLint now complains about my way of writing code. To please it,
+TSLint now complains about my way of writing code. To please it,
 I had to:
 
 - Add scope on properties and methods
-- Split _dummy.ts_ into _another.class.ts_ and _some.class.ts_ as TypeScript recommends one class per file.
-- Organize import by alphabetical orders
+- Split _dummy.ts_ into [_another.class.ts_](https://github.com/Al-un/nuxt-ts/blob/master/lib/another.class.ts)
+  and [_some.class.ts_](https://github.com/Al-un/nuxt-ts/blob/master/lib/some.class.ts)
+  as TypeScript recommends one class per file.
+- Organize import by alphabetical orders. I split my import between third-party imports
+  and this project specific imports.
 - Use TypeScript types (`number` instead of `Number`, `string` instead of `String`, etc)
 - Add / Update types in JSDocs as well
 
@@ -285,6 +337,8 @@ Add a `test` script in _package.json_:
   }
 }
 ```
+
+> Feel free to add the `--verbose` and/or `--coverage` options
 
 #### Testing plain TypeScript
 
@@ -369,7 +423,7 @@ describe('Logo', () => {
 });
 ```
 
-VS Code highlight the Logo import: `Cannot find module '@/components/logo.vue'.ts(2307)`.
+VS Code highlights the Logo import: `Cannot find module '@/components/logo.vue'.ts(2307)`.
 Create a _ts-shim.d.ts_ at root folder:
 
 ```ts
@@ -379,7 +433,7 @@ declare module '*.vue' {
 }
 ```
 
-Credits to [Beetaa's template](https://github.com/beetaa/template-vue) for
+Credits to [Beetaa](https://github.com/beetaa/) for
 [_ts-shim.d.ts_](https://github.com/beetaa/template-vue/blob/master/ts-shim.d.ts)
 and [_tsconfig.json_](https://github.com/beetaa/template-vue/blob/master/tsconfig.json).
 Originally from [his comment](https://github.com/vuejs/vue/issues/5298#issuecomment-453343514)
@@ -454,6 +508,9 @@ when running `yarn test`. I have no problem when running `yarn dev`.
 > - How to use `Vue.extend` syntax
 > - How about official [`vue-class-component`](https://github.com/vuejs/vue-class-component)
 
+For references, please have a look at the [_tests/_ folder](https://github.com/Al-un/nuxt-ts/tree/master/tests)
+to check the components and page tests.
+
 ### Vuex
 
 Our app would feel lonely without a store. Let's add Vuex. I am pretty new with
@@ -478,11 +535,11 @@ I created a _counter_ module with split files:
 ```
 
 `type.ts` will define types specific to the store. Other files are following Nuxt
-standards. For more details regarding Vuex in Nuxt, please check
+naming convention. For more details regarding Vuex in Nuxt, please check
 [Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
 
 ```ts
-// actions.ts
+// store/counter/actions.ts
 import { ActionContext, ActionTree } from 'vuex/types';
 import { CounterState, RootState } from './types';
 
@@ -497,7 +554,7 @@ const actions: ActionTree<CounterState, RootState> = {
 
 export default actions;
 
-// getters.ts
+// store/counter/getters.ts
 import { GetterTree } from 'vuex';
 import { CounterState } from './types';
 
@@ -508,7 +565,7 @@ const getters: GetterTree<CounterState, CounterState> = {
 
 export default getters;
 
-// mutations.ts
+// store/counter/mutations.ts
 import { MutationTree } from 'vuex';
 import { CounterState } from './types';
 
@@ -522,7 +579,7 @@ const mutations: MutationTree<CounterState> = {
 
 export default mutations;
 
-// state.ts
+// store/counter/state.ts
 import { RootState } from './types';
 
 // By Nuxt conventation, states must export a default function
@@ -530,7 +587,7 @@ export default (): RootState => ({
   count: 0
 });
 
-// types.ts
+// store/counter/types.ts
 export interface CounterState extends RootState {
   // Not used, simulating a value which is not initialised
   clickCount: number;
@@ -543,34 +600,23 @@ export interface RootState {
 
 #### Store usage
 
-Now let's use our store in our home page (_pages/index.vue_):
+New logic calls for a new component. Create a _components/Counter.vue_:
 
-```html
+```vue
 <template>
-  <section class="container">
-    <div>
-      <logo />
-
-      <h3>Testing Vuex</h3>
-      <div>
-        {{ count }} (square: {{ square }})
-        <button @click="increment">Increment</button>
-      </div>
-    </div>
-  </section>
+  <div>
+    <span class="count">{{ count }}</span>
+    <span class="square">(square: {{ square }})</span>
+    <button @click="increment">Increment</button>
+  </div>
 </template>
-```
 
-```ts
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mapState, mapActions, mapGetters } from 'vuex';
-import Logo from '@/components/Logo.vue';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 @Component({
-  components: {
-    Logo
-  },
+  name: 'Counter',
   computed: {
     ...mapState('counter', ['count']),
     ...mapGetters('counter', ['square'])
@@ -579,85 +625,87 @@ import Logo from '@/components/Logo.vue';
     ...mapActions('counter', ['increment'])
   }
 })
+export default class Counter extends Vue {}
+</script>
+```
+
+which is used in our home page (_pages/index.vue_):
+
+```vue
+<template>
+  <div>
+    <component-wrapper title="logo">
+      <logo />
+    </component-wrapper>
+
+    <component-wrapper title="Typescript classes">
+      <typescript-class />
+    </component-wrapper>
+
+    <component-wrapper title="Counter">
+      <counter />
+    </component-wrapper>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+import ComponentWrapper from '@/components/ComponentWrapper.vue';
+
+import Counter from '@/components/Counter.vue';
+import Logo from '@/components/Logo.vue';
+import TypescriptClass from '@/components/TypescriptClass.vue';
+
+@Component({
+  components: {
+    ComponentWrapper,
+
+    Counter,
+    Logo,
+    TypescriptClass
+  }
+})
 export default class Index extends Vue {}
 </script>
 ```
 
-Now, `yarn dev` should deploy smoothly. However, `yarn test` fails because the
-store is not defined in our test.
+Now, `yarn dev` should deploy smoothly
 
-#### Test update
+#### Testing Vuex-based components
 
-Our index page tests need some updates. Before that, let's change a bit our
-template for testing purpose:
+To test our _Counter_ component, we need to initialise the Vuex store.
+(read more about [Testing Vuex in components](https://vue-test-utils.vuejs.org/guides/#testing-vuex-in-components)):
 
-```html
-<template>
-  <section class="container">
-    <div>
-      <logo />
-
-      <h3>Testing Vuex</h3>
-      <div>
-        <span class="count">{{ count }}</span>
-        <span class="square">(square: {{ square }})</span>
-        <button @click="increment">Increment</button>
-      </div>
-    </div>
-  </section>
-</template>
-```
-
-Adding `span` and CSS classes help us to identify `{{ count }}` and `{{ square }}`.
-
-Vuex testing requires two steps
-(read more about [Vuex testing on `vue-test-utils` documentation](https://vue-test-utils.vuejs.org/guides/#testing-vuex-in-components)):
-
-1. Store mocking
-2. Component tests
+As we are using TypeScript, our mock has to be properly typed thanks to _store/counter/types.ts_:
 
 ```ts
-import IndexPage from '@/pages/index.vue';
+import Counter from '@/components/Counter.vue';
 import { CounterState } from '@/store/counter/types';
 import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import Vuex, { Store } from 'vuex';
 
-// Define variables for testing
 const localVue = createLocalVue();
 localVue.use(Vuex);
 let mockStore: Store<CounterState>;
-let wrapper: Wrapper<IndexPage>;
+let wrapper: Wrapper<Counter>;
 
-// Mocking increment function
 const increment = jest.fn();
 
-describe('HomePage', () => {
+describe('Counter', () => {
   beforeEach(() => {
-    // Mocking our store
     mockStore = new Vuex.Store({
       modules: {
         counter: {
-          // mocking actions requires mocked functions to check if they were
-          // called, with which arguments etc
-          actions: {
-            increment
-          },
-          // We are not testing the square getter here so we can just return
-          // any number
-          getters: {
-            square: () => 5
-          },
-          // In Nuxt, all modules are namespaced
+          actions: { increment },
+          getters: { square: () => 5 },
           namespaced: true,
-          // initial state
-          state: {
-            count: 0
-          }
+          state: { count: 0 }
         }
       }
     });
 
-    wrapper = shallowMount(IndexPage, { store: mockStore, localVue });
+    wrapper = shallowMount(Counter, { store: mockStore, localVue });
   });
 
   test('is a Vue component', () => {
