@@ -1,85 +1,36 @@
 <template>
-  <section class="container">
-    <div>
+  <div>
+    <component-wrapper title="logo">
       <logo/>
+    </component-wrapper>
 
-      <h3>Testing Vuex</h3>
-      <div>
-        <span class="count">{{ count }}</span>
-        <span class="square">(square: {{ square }})</span>
-        <button @click="increment">Increment</button>
-      </div>
+    <component-wrapper title="Typescript classes">
+      <typescript-class/>
+    </component-wrapper>
 
-      <h3>From ts classes:</h3>
-      <p>{{ val }}</p>
-      <p>{{ text }}</p>
-      <div/>
-    </div>
-  </section>
+    <component-wrapper title="Counter">
+      <counter/>
+    </component-wrapper>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mapState, mapActions, mapGetters } from 'vuex';
+
+import ComponentWrapper from '@/components/ComponentWrapper.vue';
+
+import Counter from '@/components/Counter.vue';
 import Logo from '@/components/Logo.vue';
-import SomeClass from '@/lib/some.class';
-import AnotherClass from '@/lib/another.class';
+import TypescriptClass from '@/components/TypescriptClass.vue';
 
 @Component({
   components: {
-    Logo
-  },
-  computed: {
-    ...mapState('counter', ['count']),
-    ...mapGetters('counter', ['square'])
-  },
-  methods: {
-    ...mapActions('counter', ['increment'])
+    ComponentWrapper,
+
+    Counter,
+    Logo,
+    TypescriptClass
   }
 })
-export default class Index extends Vue {
-  val: number = 0;
-  text: string = '';
-
-  mounted() {
-    const some = new SomeClass();
-    some.value = 42;
-    const anot = new AnotherClass();
-    this.val = some.moarValue();
-    this.text = anot.moarText();
-  }
-}
+export default class Index extends Vue {}
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>

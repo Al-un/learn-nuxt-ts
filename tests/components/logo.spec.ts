@@ -1,9 +1,14 @@
 import Logo from '@/components/logo.vue';
-import { mount } from '@vue/test-utils';
+import { mount, Wrapper } from '@vue/test-utils';
+
+let wrapper: Wrapper<Logo>;
 
 describe('Logo', () => {
+  beforeEach(() => {
+    wrapper = mount(Logo);
+  });
+
   it('is a Vue component', () => {
-    const wrapper = mount(Logo);
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
 });

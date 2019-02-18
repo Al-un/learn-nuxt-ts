@@ -465,7 +465,7 @@ TypeScript in Vuex so I am discovering in real time :D
 To simulate a real life application, let's use Vuex modules.
 [More about Vuex modules here](https://vuex.vuejs.org/guide/modules.html)
 
-I created a _counter_ modules with split files:
+I created a _counter_ module with split files:
 
 ```
 - store
@@ -477,7 +477,7 @@ I created a _counter_ modules with split files:
     - types.ts
 ```
 
-`type.ts` will defined types specific to the store. Other files are following Nuxt
+`type.ts` will define types specific to the store. Other files are following Nuxt
 standards. For more details regarding Vuex in Nuxt, please check
 [Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
 

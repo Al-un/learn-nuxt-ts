@@ -9,7 +9,7 @@
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "dependencies": {
     "cross-env": "^5.2.0",
