@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
-import { CounterState } from './types';
+import { RootState } from './types';
 
-const mutations: MutationTree<CounterState> = {
+const mutations: MutationTree<RootState> = {
   increment: (state) => {
     state.count++;
   }

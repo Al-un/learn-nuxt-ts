@@ -19,6 +19,8 @@ To achieve a minimal application, I plan to gather:
 - _16-Feb-2019_: initialisation
 - _18-Feb-2019_: update to meet Nuxt standards (logic moved at components level and
   each component is tested)
+- _25-Feb-2019_: update Vuex state vs rootState. I was confused about rootState 
+  typing. As Vuex modules are not used here, local state equals root state.
 
 ## TODO
 
@@ -541,10 +543,10 @@ naming convention. For more details regarding Vuex in Nuxt, please check
 ```ts
 // store/counter/actions.ts
 import { ActionContext, ActionTree } from 'vuex/types';
-import { CounterState, RootState } from './types';
+import { RootState } from './types';
 
-const actions: ActionTree<CounterState, RootState> = {
-  increment: ({ commit }: ActionContext<CounterState, RootState>) => {
+const actions: ActionTree<RootState, RootState> = {
+  increment: ({ commit }: ActionContext<RootState, RootState>) => {
     // Do more business logic here
 
     // we commit something at the end
@@ -556,9 +558,9 @@ export default actions;
 
 // store/counter/getters.ts
 import { GetterTree } from 'vuex';
-import { CounterState } from './types';
+import { RootState } from './types';
 
-const getters: GetterTree<CounterState, CounterState> = {
+const getters: GetterTree<RootState, RootState> = {
   // Completely useless and irrelevant getter but I needed some getter ^^
   square: (state): number => state.count * state.count
 };
@@ -567,12 +569,12 @@ export default getters;
 
 // store/counter/mutations.ts
 import { MutationTree } from 'vuex';
-import { CounterState } from './types';
+import { RootState } from './types';
 
-const mutations: MutationTree<CounterState> = {
-  // Here, state type "CounterState" can be omitted because already handled
+const mutations: MutationTree<RootState> = {
+  // Here, state type "RootState" can be omitted because already handled
   // by the generic in MutationTree<X>
-  increment: (state: CounterState) => {
+  increment: (state: RootState) => {
     state.count++;
   }
 };
@@ -588,13 +590,10 @@ export default (): RootState => ({
 });
 
 // store/counter/types.ts
-export interface CounterState extends RootState {
-  // Not used, simulating a value which is not initialised
-  clickCount: number;
-}
-
 export interface RootState {
   count: number;
+  // Not used, simulating a value which is not initialised
+  clickCount?: number;
 }
 ```
 
@@ -681,13 +680,13 @@ As we are using TypeScript, our mock has to be properly typed thanks to _store/c
 
 ```ts
 import Counter from '@/components/Counter.vue';
-import { CounterState } from '@/store/counter/types';
+import { RootState } from '@/store/counter/types';
 import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import Vuex, { Store } from 'vuex';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
-let mockStore: Store<CounterState>;
+let mockStore: Store<RootState>;
 let wrapper: Wrapper<Counter>;
 
 const increment = jest.fn();

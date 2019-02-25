@@ -1,7 +1,7 @@
 import { GetterTree } from 'vuex';
-import { CounterState } from './types';
+import { RootState } from './types';
 
-const getters: GetterTree<CounterState, CounterState> = {
+const getters: GetterTree<RootState, RootState> = {
   square: (state): number => state.count * state.count
 };
 
