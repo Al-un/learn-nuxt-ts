@@ -19,8 +19,9 @@ To achieve a minimal application, I plan to gather:
 - _16-Feb-2019_: initialisation
 - _18-Feb-2019_: update to meet Nuxt standards (logic moved at components level and
   each component is tested)
-- _25-Feb-2019_: update Vuex state vs rootState. I was confused about rootState 
+- _25-Feb-2019_: update Vuex state vs rootState. I was confused about rootState
   typing. As Vuex modules are not used here, local state equals root state.
+- _25-Feb-2019_: Adding _Reuse mapped Vuex elements_
 
 ## TODO
 
@@ -729,4 +730,100 @@ describe('Counter', () => {
 });
 ```
 
-And tadaa!
+#### Reuse mapped Vuex elements
+
+Thanks for Vuex mappers, it is very easy to access Vuex state, getters & actions:
+
+```ts
+  computed: {
+    ...mapState('counter', ['count']),
+    ...mapGetters('counter', ['square'])
+  },
+  methods: {
+    ...mapActions('counter', ['increment'])
+  }
+```
+
+But what if we want to re-use it? For example, if I want to wrap the `increment`
+method, I would like to be able to call `this.increment()`
+
+- One solution is to use [`vuex-class`](https://github.com/ktsn/vuex-class) as
+  suggested by [this "_Vuex and Typescript_" Article](https://codeburst.io/vuex-and-typescript-3427ba78cfa8).
+- I also encountered [`vuex-typex`](https://github.com/mrcrowl/vuex-typex) from
+  [this "_Writing Vuex stores in TypeScript_"](https://frontendsociety.com/writing-vuex-stores-in-typescript-b570ca34c2a).
+
+> I have tried none of the above methods
+
+As for me, I came across an easier solution. It's kind of magic but more than
+enough for my current needs. Let's say I want to:
+
+- reuse a getter
+- reuse an action
+
+Let's change our _components/Counter.vue_ to add that:
+
+```vue
+<template>
+  <div>
+    <span class="count">{{ count }}</span>
+    <span class="square">({{ squareText }}: {{ square }})</span>
+    <span class="squareAndCount">(squarePlusCount: {{ squarePlusCount }})</span>
+    <button @click="wrappedIncrement">Increment</button>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { mapActions, mapGetters, mapState } from 'vuex';
+
+/**
+ * A basic counter with the square value of the counter to test Vuex
+ */
+@Component({
+  name: 'Counter',
+  computed: {
+    ...mapState('counter', ['count']),
+    ...mapGetters('counter', ['square'])
+  },
+  methods: {
+    ...mapActions('counter', ['increment'])
+  }
+})
+export default class Counter extends Vue {
+  // data are pure properties. Bonus here as non related to Vuex
+  private squareText: string = 'square';
+  // computed properties are defined as non-null variables
+  private count!: number;
+  private square!: number;
+  // methods should match expected signature
+  private increment!: () => void;
+
+  /**
+   * Computed property
+   */
+  public get squarePlusCount() {
+    return this.square + this.count;
+  }
+
+  /**
+   * Components methods are simply class methods
+   */
+  public wrappedIncrement() {
+    // do some stuff
+    console.log('going to increment!!');
+    // dispatch the "increment" action
+    this.increment();
+  }
+}
+</script>
+```
+
+By leveraging the [_Class-based component approach_](https://alligator.io/vuejs/typescript-class-components/),
+our code is now typing Vuex elements and also gains readibility. I indeed enjoy
+the fact that our methods and computed properties are split in two parts:
+
+1. `@Component({...})` contains all Vuex related computed properties and methods
+2. Class body contains component-specific computed properties, as getters, and
+   methods, as methods.
+
+Notice that even if we wrapped our `increment` action, all tests should pass.
