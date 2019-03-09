@@ -16,6 +16,11 @@ module.exports = {
     title: pkg.name
   },
 
+  // https://nuxtjs.org/api/configuration-env/
+  env:{
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+  },
+
   /*
    ** Customize the progress-bar color
    */
