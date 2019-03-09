@@ -12,6 +12,9 @@ with Nuxt+TypeScript in a full application from scratch.
   - [03.1 Prettier](#prettier)
   - [03.2 ESLint](#eslint)
 
+This tutorial has underwent a complete refactoring on March 2019. Old version
+is archived at the [`archive/2019-03-09_refactoring` branch](https://github.com/Al-un/nuxt-ts/tree/archive/2019-03-09_refactoring)
+
 ## Initialise project
 
 Create a NuxtJS project as usual ([Nuxt doc](https://nuxtjs.org/guide/installation)):
@@ -186,6 +189,7 @@ At first, I planned to use [TSLint](https://palantir.github.io/tslint/) but
 so let's move as well.
 
 Let's add [ESLint](https://eslint.org) some plugins:
+
 - [`@typescript-eslint/eslint-plugin`](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin)
 - [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) due
   to our _Prettier_ usage
@@ -228,6 +232,7 @@ module.exports = {
 ```
 
 Few explanations:
+
 - `vue-eslint-parser` is required by `eslint-plugin-vue` (check [doc](https://vuejs.github.io/eslint-plugin-vue/user-guide/#faq))
   and as `@typescript-eslint/parser` is required, it is moved to `parserOptions`
 - Order in `extends` matters. Prettier configurations are at the end to ensure they
