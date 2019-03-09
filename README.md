@@ -9,6 +9,8 @@ with Nuxt+TypeScript in a full application from scratch.
 - [01. Initialise Project](#initialise-project)
 - [02. Switch to TypeScript](#switch-to-typescript)
 - [03. Code control: formatter and linter](#code-control-formatter-and-linter)
+  - [03.1 Prettier](#prettier)
+  - [03.2 ESLint](#eslint)
 
 ## Initialise project
 
@@ -176,3 +178,58 @@ Add a _.prettierrc_ file to configure prettier. Options can be found on
   "singleQuote": true
 }
 ```
+
+### ESLint
+
+At first, I planned to use [TSLint](https://palantir.github.io/tslint/) but
+[_TypeScript ecosystem is moving from TSLint to ESLint_](https://cmty.app/nuxt/nuxt.js/issues/c8742)
+so let's move as well.
+
+Let's add [ESLint](https://eslint.org) some plugins:
+- [`@typescript-eslint/eslint-plugin`](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin)
+- [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) due
+  to our _Prettier_ usage
+- [`eslint-plugin-vue`](https://vuejs.github.io/eslint-plugin-vue/) per [Nuxt documentation](https://nuxtjs.org/guide/development-tools/#eslint-and-prettier)
+
+```sh
+yarn add --dev eslint @typescript-eslint/eslint-plugin eslint-config-prettier eslint-plugin-vue
+```
+
+Configure ESLint with the _.eslintrc.js_ file:
+
+```js
+module.exports = {
+  root: true,
+
+  env: {
+    browser: true,
+    node: true
+  },
+
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2017,
+    sourceType: 'module',
+    project: './tsconfig.json'
+  },
+
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/recommended',
+    'prettier',
+    'prettier/vue',
+    'prettier/@typescript-eslint'
+  ],
+
+  plugins: ['vue', '@typescript-eslint']
+};
+```
+
+Few explanations:
+- `vue-eslint-parser` is required by `eslint-plugin-vue` (check [doc](https://vuejs.github.io/eslint-plugin-vue/user-guide/#faq))
+  and as `@typescript-eslint/parser` is required, it is moved to `parserOptions`
+- Order in `extends` matters. Prettier configurations are at the end to ensure they
+  override other rules
+- `env` is set to `browser` and `node` for SSR reasons (check [Nuxt doc](https://nuxtjs.org/guide/development-tools/#eslint-and-prettier))
