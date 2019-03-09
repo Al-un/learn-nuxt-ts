@@ -8,29 +8,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { Component, Vue } from 'nuxt-property-decorator';
+import { counterVuexNamespace } from '@/store/counter/const';
 
 /**
  * A basic counter with the square value of the counter to test Vuex
  */
-@Component({
-  name: 'Counter',
-  computed: {
-    ...mapState('counter', ['count']),
-    ...mapGetters('counter', ['square'])
-  },
-  methods: {
-    ...mapActions('counter', ['increment'])
-  }
-})
+@Component({})
 export default class Counter extends Vue {
   // data are pure properties
-  private squareText: string = 'square';
+  public squareText: string = 'square';
+
   // computed properties are defined as non-null variables
+  @counterVuexNamespace.State('count')
   private count!: number;
+  @counterVuexNamespace.Getter('square')
   private square!: number;
+
   // methods should match expected signature
+  @counterVuexNamespace.Action('increment')
   private increment!: () => void;
 
   /**

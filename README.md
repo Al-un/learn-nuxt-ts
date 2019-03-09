@@ -19,9 +19,15 @@ To achieve a minimal application, I plan to gather:
 - _16-Feb-2019_: initialisation
 - _18-Feb-2019_: update to meet Nuxt standards (logic moved at components level and
   each component is tested)
-- _25-Feb-2019_: update Vuex state vs rootState. I was confused about rootState
+- _25-Feb-2019_:
+  - update Vuex state vs rootState. I was confused about rootState
   typing. As Vuex modules are not used here, local state equals root state.
-- _25-Feb-2019_: Adding _Reuse mapped Vuex elements_
+  - Adding _Reuse mapped Vuex elements_
+- _09-Mar-2019:
+  - correcting Vuex state vs rootState. Was confused again
+  - [Switching to `nuxt-property-decorator`](https://github.com/Al-un/nuxt-ts/issues/1)
+    According to the [documentation](https://github.com/nuxt-community/nuxt-property-decorator#nuxt-ts-instructions),
+    it works out of the box with Nuxt TS so no need to change _nuxt.config.ts_.
 
 ## TODO
 
@@ -66,11 +72,11 @@ I mainly rely on the two following links:
 
 #### Add TypeScript to project
 
-Add `nuxt-ts` (TypeScript alter ego of `nuxt`) and `vue-property-decorator.`
+Add `nuxt-ts` (TypeScript alter ego of `nuxt`) and `nuxt-property-decorator.`
 
 ```sh
 yarn add nuxt-ts
-yarn add --dev vue-property-decorator
+yarn add --dev nuxt-property-decorator
 ```
 
 Change `nuxt` to `nuxt-ts` in _package.json_ scripts:
@@ -134,7 +140,7 @@ refactored a bit the template:
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 
 import Logo from '@/components/Logo.vue';
 
@@ -189,7 +195,7 @@ To use those classes, create a _TypescriptClass_ component (_components/Typescri
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 
 import AnotherClass from '@/lib/another.class';
 import SomeClass from '@/lib/some.class';
@@ -228,7 +234,7 @@ TypescriptClass component can then be added in our home page (_pages/index.vue_)
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 
 import Logo from '@/components/Logo.vue';
 import TypescriptClass from '@/components/TypescriptClass.vue';
@@ -483,7 +489,7 @@ Okay, _Logo_ is not declared. Let's declare it in _components/Logo.vue_:
 
 ```ts
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 
 @Component({
   name: 'Logo'
@@ -531,71 +537,110 @@ I created a _counter_ module with split files:
 - store
   - counter
     - actions.ts
+    - const.ts
     - getters.ts
     - mutations.ts
     - state.ts
     - types.ts
+  type.ts
 ```
 
-`type.ts` will define types specific to the store. Other files are following Nuxt
-naming convention. For more details regarding Vuex in Nuxt, please check
-[Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
+- `store/counter/type.ts` will define types specific to the store. Other files are following Nuxt
+  naming convention. For more details regarding Vuex in Nuxt, please check
+  [Nuxt documentation](https://nuxtjs.org/guide/vuex-store/)
+- `store/type/ts` defines root module state
+- `store/counter/const.ts` define a constant for `vuex-class` usage.
+
 
 ```ts
+// store/type.ts
+export interface CounterState {
+  count: number;
+}
+
+
 // store/counter/actions.ts
 import { ActionContext, ActionTree } from 'vuex/types';
-import { RootState } from './types';
+import { CounterState } from './types';
+import { RootState } from '../type';
 
-const actions: ActionTree<RootState, RootState> = {
-  increment: ({ commit }: ActionContext<RootState, RootState>) => {
-    // Do more business logic here
+/**
+ * Action context specific to counter module
+ */
+interface CounterActionContext extends ActionContext<CounterState, RootState>{}
 
-    // we commit something at the end
+/**
+ * Counter actions
+ */
+export const actions: ActionTree<CounterState, RootState> = {
+  increment: ({ commit }: CounterActionContext) => {
     commit('increment');
   }
 };
 
 export default actions;
 
+
 // store/counter/getters.ts
 import { GetterTree } from 'vuex';
-import { RootState } from './types';
+import { CounterState } from './types';
+import { RootState } from '../type';
 
-const getters: GetterTree<RootState, RootState> = {
-  // Completely useless and irrelevant getter but I needed some getter ^^
+/**
+ * Counter getters
+ */
+export const getters: GetterTree<CounterState, RootState> = {
   square: (state): number => state.count * state.count
 };
 
 export default getters;
 
+
 // store/counter/mutations.ts
 import { MutationTree } from 'vuex';
-import { RootState } from './types';
+import { CounterState } from './types';
 
-const mutations: MutationTree<RootState> = {
-  // Here, state type "RootState" can be omitted because already handled
-  // by the generic in MutationTree<X>
-  increment: (state: RootState) => {
+/**
+ * Counter mutations
+ */
+export const mutations: MutationTree<CounterState> = {
+  increment: (state) => {
     state.count++;
   }
 };
 
 export default mutations;
 
-// store/counter/state.ts
-import { RootState } from './types';
 
-// By Nuxt conventation, states must export a default function
-export default (): RootState => ({
+// store/counter/state.ts
+import { CounterState } from './types';
+
+/**
+ * Counter state initializer
+ */
+export const initState = (): CounterState => ({
   count: 0
 });
 
+export default initState;
+
+
 // store/counter/types.ts
-export interface RootState {
+/**
+ * Counter state definition
+ */
+export interface CounterState {
   count: number;
-  // Not used, simulating a value which is not initialised
-  clickCount?: number;
 }
+
+
+// store/counter/const.ts
+import { namespace } from 'vuex-class';
+
+/**
+ * Counter namespace for vuex-class injection
+ */
+export const counterVuexNamespace = namespace('counter/');
 ```
 
 #### Store usage
@@ -612,20 +657,21 @@ New logic calls for a new component. Create a _components/Counter.vue_:
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { Component, Vue } from 'nuxt-property-decorator';
+import { counterVuexNamespace } from '@/store/counter/const';
 
-@Component({
-  name: 'Counter',
-  computed: {
-    ...mapState('counter', ['count']),
-    ...mapGetters('counter', ['square'])
-  },
-  methods: {
-    ...mapActions('counter', ['increment'])
-  }
-})
-export default class Counter extends Vue {}
+@Component({})
+export default class Counter extends Vue {
+  // computed properties are defined as non-null variables
+  @counterVuexNamespace.State('count')
+  private count!: number;
+  @counterVuexNamespace.Getter('square')
+  private square!: number;
+
+  // methods should match expected signature
+  @counterVuexNamespace.Action('increment')
+  private increment!: () => void;
+}
 </script>
 ```
 
@@ -649,7 +695,7 @@ which is used in our home page (_pages/index.vue_):
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 
 import ComponentWrapper from '@/components/ComponentWrapper.vue';
 
@@ -681,13 +727,13 @@ As we are using TypeScript, our mock has to be properly typed thanks to _store/c
 
 ```ts
 import Counter from '@/components/Counter.vue';
-import { RootState } from '@/store/counter/types';
+import { CounterState } from '@/store/counter/types';
 import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import Vuex, { Store } from 'vuex';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
-let mockStore: Store<RootState>;
+let mockStore: Store<CounterState>;
 let wrapper: Wrapper<Counter>;
 
 const increment = jest.fn();
@@ -732,7 +778,7 @@ describe('Counter', () => {
 
 #### Reuse mapped Vuex elements
 
-Thanks for Vuex mappers, it is very easy to access Vuex state, getters & actions:
+A solution is to rely on Vuex mappers like in standard Vue.js:
 
 ```ts
   computed: {
@@ -744,23 +790,42 @@ Thanks for Vuex mappers, it is very easy to access Vuex state, getters & actions
   }
 ```
 
-But what if we want to re-use it? For example, if I want to wrap the `increment`
-method, I would like to be able to call `this.increment()`
+If this options is chosen, attributes should be defined in case actions, state
+or getters need to be reused in other methods / getters (computed properties).
+Simple declare as nullable attributes:
 
-- One solution is to use [`vuex-class`](https://github.com/ktsn/vuex-class) as
-  suggested by [this "_Vuex and Typescript_" Article](https://codeburst.io/vuex-and-typescript-3427ba78cfa8).
-- I also encountered [`vuex-typex`](https://github.com/mrcrowl/vuex-typex) from
-  [this "_Writing Vuex stores in TypeScript_"](https://frontendsociety.com/writing-vuex-stores-in-typescript-b570ca34c2a).
+```ts
+@Component({
+  name: 'Counter',
+  computed: {
+    ...mapState('counter', ['count']),
+    ...mapGetters('counter', ['square'])
+  },
+  methods: {
+    ...mapActions('counter', ['increment'])
+  }
+})
+export default class Counter extends Vue {
+  // computed properties are defined as non-null variables
+  private count!: number;
+  private square!: number;
+  // methods should match expected signature
+  private increment!: () => void;
 
-> I have tried none of the above methods
+  /**
+   * Computed property
+   */
+  public get squarePlusCount() {
+    return this.square + this.count;
+  }
+}
+```
 
-As for me, I came across an easier solution. It's kind of magic but more than
-enough for my current needs. Let's say I want to:
+Another alternative I have not tried is [`vuex-typex`](https://github.com/mrcrowl/vuex-typex) from
+[this "_Writing Vuex stores in TypeScript_"](https://frontendsociety.com/writing-vuex-stores-in-typescript-b570ca34c2a).
 
-- reuse a getter
-- reuse an action
-
-Let's change our _components/Counter.vue_ to add that:
+However, `nuxt-property-decorator` includes [`vuex-class`](https://github.com/ktsn/vuex-class) 
+so let's use it by changing our _components/Counter.vue_ to add that:
 
 ```vue
 <template>
@@ -773,29 +838,25 @@ Let's change our _components/Counter.vue_ to add that:
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { Component, Vue } from 'nuxt-property-decorator';
+import { counterVuexNamespace } from '@/store/counter/const';
 
 /**
  * A basic counter with the square value of the counter to test Vuex
  */
-@Component({
-  name: 'Counter',
-  computed: {
-    ...mapState('counter', ['count']),
-    ...mapGetters('counter', ['square'])
-  },
-  methods: {
-    ...mapActions('counter', ['increment'])
-  }
-})
+@Component({})
 export default class Counter extends Vue {
-  // data are pure properties. Bonus here as non related to Vuex
-  private squareText: string = 'square';
+  // data are pure properties
+  public squareText: string = 'square';
+
   // computed properties are defined as non-null variables
+  @counterVuexNamespace.State('count')
   private count!: number;
+  @counterVuexNamespace.Getter('square')
   private square!: number;
+
   // methods should match expected signature
+  @counterVuexNamespace.Action('increment')
   private increment!: () => void;
 
   /**
@@ -817,13 +878,5 @@ export default class Counter extends Vue {
 }
 </script>
 ```
-
-By leveraging the [_Class-based component approach_](https://alligator.io/vuejs/typescript-class-components/),
-our code is now typing Vuex elements and also gains readibility. I indeed enjoy
-the fact that our methods and computed properties are split in two parts:
-
-1. `@Component({...})` contains all Vuex related computed properties and methods
-2. Class body contains component-specific computed properties, as getters, and
-   methods, as methods.
 
 Notice that even if we wrapped our `increment` action, all tests should pass.

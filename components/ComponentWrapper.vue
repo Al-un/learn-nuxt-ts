@@ -6,23 +6,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'nuxt-property-decorator';
 
 /**
  * a component wrapper to ensure that all presented components have proper
  * borders and title
  */
-@Component({
-  name: 'ComponentWrapper',
-
-  props: {
-    title: {
-      default: 'no title',
-      type: String
-    }
-  }
-})
-export default class ComponentWrapper extends Vue {}
+@Component({})
+export default class ComponentWrapper extends Vue {
+  @Prop({ default: 'no title' })
+  public title!: string;
+}
 </script>
 
 <style scoped>
@@ -46,7 +40,7 @@ section > h2 {
   margin: 0px 0px 20px;
   /* colors */
   background: #009688;
-  color: #F9FBE7;
+  color: #f9fbe7;
   /* sizing */
   box-sizing: border-box;
   width: 100%;
