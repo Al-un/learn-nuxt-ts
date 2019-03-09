@@ -1,4 +1,4 @@
-import Logo from '@/components/logo.vue';
+import Logo from '@/components/Logo.vue';
 import { mount, Wrapper } from '@vue/test-utils';
 
 let wrapper: Wrapper<Logo>;
