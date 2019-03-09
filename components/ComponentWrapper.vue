@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'nuxt-property-decorator';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
 /**
  * a component wrapper to ensure that all presented components have proper

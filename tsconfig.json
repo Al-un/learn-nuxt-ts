@@ -8,7 +8,9 @@
     "paths": {
       "@/*": ["*"],
       "~/*": ["*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
 
   "include": ["**/*.ts", "**/*.vue"],

@@ -1,6 +1,7 @@
 import { GetterTree } from 'vuex';
-import { CounterState } from './types';
+
 import { RootState } from '../type';
+import { CounterState } from './types';
 
 /**
  * Counter getters

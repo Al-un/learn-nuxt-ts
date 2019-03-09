@@ -1,4 +1,5 @@
 import { MutationTree } from 'vuex';
+
 import { CounterState } from './types';
 
 /**

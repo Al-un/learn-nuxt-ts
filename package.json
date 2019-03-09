@@ -5,10 +5,10 @@
   "author": "Al-un",
   "private": true,
   "scripts": {
-    "dev": "nuxt-ts",
     "build": "nuxt-ts build",
-    "start": "nuxt-ts start",
+    "dev": "nuxt-ts",
     "generate": "nuxt-ts generate",
+    "start": "nuxt-ts start",
     "test": "jest --verbose"
   },
   "dependencies": {

@@ -1,6 +1,7 @@
 import { ActionContext, ActionTree } from 'vuex/types';
-import { CounterState } from './types';
+
 import { RootState } from '../type';
+import { CounterState } from './types';
 
 /**
  * Action context specific to counter module
