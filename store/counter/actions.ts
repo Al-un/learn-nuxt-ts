@@ -1,8 +1,17 @@
 import { ActionContext, ActionTree } from 'vuex/types';
-import { RootState } from './types';
+import { CounterState } from './types';
+import { RootState } from '../type';
 
-const actions: ActionTree<RootState, RootState> = {
-  increment: ({ commit }: ActionContext<RootState, RootState>) => {
+/**
+ * Action context specific to counter module
+ */
+interface CounterActionContext extends ActionContext<CounterState, RootState>{}
+
+/**
+ * Counter actions
+ */
+export const actions: ActionTree<CounterState, RootState> = {
+  increment: ({ commit }: CounterActionContext) => {
     commit('increment');
   }
 };

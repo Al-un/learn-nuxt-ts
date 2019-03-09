@@ -1,11 +1,11 @@
 import Counter from '@/components/Counter.vue';
-import { RootState } from '@/store/counter/types';
+import { CounterState } from '@/store/counter/types';
 import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import Vuex, { Store } from 'vuex';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
-let mockStore: Store<RootState>;
+let mockStore: Store<CounterState>;
 let wrapper: Wrapper<Counter>;
 
 const increment = jest.fn();

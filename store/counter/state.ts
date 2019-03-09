@@ -1,5 +1,10 @@
-import { RootState } from './types';
+import { CounterState } from './types';
 
-export default (): RootState => ({
+/**
+ * Counter state initializer
+ */
+export const initState = (): CounterState => ({
   count: 0
 });
+
+export default initState;

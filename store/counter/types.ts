@@ -1,5 +1,6 @@
-export interface RootState {
+/**
+ * Counter state definition
+ */
+export interface CounterState {
   count: number;
-  // Not used, simulating a value which is not initialised
-  clickCount?: number;
 }
