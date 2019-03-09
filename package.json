@@ -5,16 +5,17 @@
   "author": "Al-un",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate"
   },
   "dependencies": {
     "cross-env": "^5.2.0",
-    "nuxt": "^2.4.0"
+    "nuxt-ts": "^2.4.5"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "nuxt-property-decorator": "^2.1.3"
   }
 }

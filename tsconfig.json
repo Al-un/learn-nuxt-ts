@@ -1,0 +1,16 @@
+{
+  "extends": "@nuxt/typescript",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["@types/node", "@nuxt/vue-app"],
+    // Vue decorators
+    "experimentalDecorators": true,
+    // to allow importing JSON
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["*"],
+      "~/*": ["*"]
+    }
+  }
+}
