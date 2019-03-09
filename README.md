@@ -6,8 +6,9 @@ has pushed one step forward TypeScript integration into Nuxt. **Kudos to Nuxt te
 Half tutorial, half exploration, I want to check out how far I can get
 with Nuxt+TypeScript in a full application from scratch.
 
-- [Initialise Project](#initialise-project)
-- [Switch to TypeScript](#switch-to-typescript)
+- [01. Initialise Project](#initialise-project)
+- [02. Switch to TypeScript](#switch-to-typescript)
+- [03. Code control: formatter and linter](#code-control-formatter-and-linter)
 
 ## Initialise project
 
@@ -61,6 +62,24 @@ yarn remove nuxt
 - `nuxt-ts` is TypeScript counterpart of `nuxt`
 - [`nuxt-property-decorator`](https://github.com/nuxt-community/nuxt-property-decorator/) is
   Nuxt counter part of [`vue-property-decorator`](https://github.com/kaorun343/vue-property-decorator)
+
+Optionally, you can add TypeScript as a development dependency:
+
+```sh
+yarn add --dev typescript
+```
+
+For VS Code users, you can force the usage of TypeScript from _node_modules/_
+instead of using default VS Code TypeScript thanks to _.vscode/settings.json_:
+
+```json
+{
+  // Windows version
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  // Linux
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
+```
 
 ### Update configuration
 
@@ -120,9 +139,9 @@ be updated:
 
 ```vue
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator";
+import { Component, Vue } from 'nuxt-property-decorator';
 
-import Logo from "@/components/Logo.vue";
+import Logo from '@/components/Logo.vue';
 
 @Component({
   components: {
@@ -133,7 +152,27 @@ export default class Index extends Vue {}
 </script>
 ```
 
-> Don't forget `lang="ts"`
+> Don't forget `lang="ts"`!
 
-At this stage, I rely on [VS Code Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-to format my code. We will define Prettier later on.
+## Code control: formatter and linter
+
+### Prettier
+
+[Prettier](https://prettier.io) is an opinionated formatter.
+
+```sh
+yarn add --dev prettier
+```
+
+VS Code users, don't forget the [VS Code Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+extension.
+
+Add a _.prettierrc_ file to configure prettier. Options can be found on
+[Prettier documentation](https://prettier.io/docs/en/options.html):
+
+```json
+{
+  "semi": true,
+  "singleQuote": true
+}
+```
