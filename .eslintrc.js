@@ -31,5 +31,11 @@ module.exports = {
   ],
 
   // https://eslint.org/docs/user-guide/configuring#configuring-plugins
-  plugins: ['vue', '@typescript-eslint']
+  plugins: ['vue', '@typescript-eslint'],
+
+  rules: {
+    "@typescript-eslint/no-empty-interface": 1,
+    // https://github.com/typescript-eslint/typescript-eslint/issues/103
+    "@typescript-eslint/no-parameter-properties": 0
+  }
 };
