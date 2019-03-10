@@ -9,6 +9,7 @@
         <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
       </div>
     </div>
+    <nuxt-link to="/polls">Polls</nuxt-link>
   </section>
 </template>
 
