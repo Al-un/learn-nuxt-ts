@@ -25,7 +25,8 @@ export default class Polls extends Vue {
 
   mounted() {
     this.loadPolls();
-  }}
+  }
+}
 </script>
 
 <style>
