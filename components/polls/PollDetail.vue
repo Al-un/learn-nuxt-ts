@@ -34,7 +34,7 @@ export default class PollList extends Vue {
   private selectedChoiceId: number = -1;
 
   @Prop({ type: Object })
-  public poll: Poll;
+  public poll!: Poll;
 
   @pollsModule.Action('vote')
   private vote!: (choiceVote: ChoiceVote) => void;

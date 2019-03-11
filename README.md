@@ -790,7 +790,8 @@ Time to vote! Let's update _components/polls/PollDetail.vue_ script:
   private selectedChoiceId: number = -1;
 
   @Prop({ type: Object })
-  public poll: Poll;
+-  public poll: Poll;
++  public poll!: Poll;
 
 +  @pollsModule.Action('vote')
 +  private vote!: (choiceVote: ChoiceVote) => void;
