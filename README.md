@@ -16,6 +16,7 @@ with Nuxt+TypeScript in a full application from scratch.
   - [04.2 Page](#polls-page)
   - [04.3 Components](#polls-components)
   - [04.4 Store](#polls-store)
+- [05. Styling](#styling)
 
 This tutorial has underwent a complete refactoring on March 2019. Old version
 is archived at the [`archive/2019-03-09_refactoring` branch](https://github.com/Al-un/nuxt-ts/tree/archive/2019-03-09_refactoring)
@@ -824,3 +825,42 @@ The vote appears, with its comments and when selecting a choice from the same
 poll, the comment text is cleared:
 
 ![Voted!](screenshots/04.04_voted_nuxt.png)
+
+## Styling
+
+This part is not related to TypeScript but having a plain interface is somehow
+hurtful. Let's dress our pages.
+
+### SCSS
+
+SCSS will help us to add some colours! Nuxt community makes our lives
+easier with the [`style-resources-module`](https://github.com/nuxt-community/style-resources-module).
+
+> Many thanks to [this article](https://hackernoon.com/how-i-use-scss-variables-mixins-functions-globally-in-nuxt-js-projects-while-compiling-css-utilit-58bb6ff30438)
+
+```sh
+yarn add --dev sass-loader node-sass @nuxtjs/style-resources
+```
+
+Following the `style-resources-module` documentation, let's update our _nuxt.config.ts_:
+
+```ts
+module.exports = {
+  modules: ['@nuxtjs/style-resources'],
+
+  styleResources: {
+    // Don't forget to create an empty file if you use
+    // this line
+    scss: ['./assets/scss/_variables.scss']
+  }
+};
+```
+
+SCSS can now be used in _.vue_ files:
+
+```html
+<style lang="scss"></style>
+```
+
+Additionally, thanks to `style-resources-module`, all variables in _./assets/scss/\_variables.scss_
+are available in _.vue_ files.

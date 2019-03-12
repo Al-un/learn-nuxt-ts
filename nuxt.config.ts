@@ -34,7 +34,7 @@ module.exports = {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ['@nuxtjs/style-resources'],
 
   /*
    ** Build configuration
@@ -45,5 +45,14 @@ module.exports = {
     //   */
     //   extend(config, ctx) {
     //   }
+  },
+
+  /**
+   * Style resources module configuration
+   */
+  styleResources: {
+    scss: [
+      './assets/scss/_variables.scss'
+    ]
   }
 };
