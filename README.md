@@ -18,7 +18,7 @@ with Nuxt+TypeScript in a full application from scratch.
   - [04.4 Store](#polls-store)
 - [05. Styling](#styling)
 
-This tutorial has underwent a complete refactoring on March 2019. Old version
+This tutorial has undergone a complete refactoring on March 2019. Old version
 is archived at the [`archive/2019-03-09_refactoring` branch](https://github.com/Al-un/nuxt-ts/tree/archive/2019-03-09_refactoring)
 
 ## Initialise project
@@ -39,7 +39,7 @@ The Nuxt project structure is explained in [Nuxt doc](https://nuxtjs.org/guide/d
 
 ![Project structure](screenshots/01.02_project_structure.png)
 
-Run the scaffolded project:
+Run the scaffold project:
 
 ```sh
 cd {your project folder}
@@ -50,7 +50,7 @@ Nuxt should not encounter any error:
 
 ![Project run](screenshots/01.03_run.png)
 
-And the application should be available on <http://localhost:3000>:
+And the application is available on <http://localhost:3000>:
 
 ![Project is working](screenshots/01.04_project_is_working.png)
 
@@ -145,7 +145,7 @@ and _"implicitly has an 'any' type"_ error
 
 ## Update existing code
 
-The scaffolded application is not much, only _pages/index.vue_ has to
+The application scaffold is not much, only _pages/index.vue_ has to
 be updated:
 
 ```vue
@@ -345,11 +345,10 @@ export const DUMMY_POLLS: Poll[] = [
 ### Polls Page
 
 Let's add an empty page _pages/polls.vue_. For lazy people like me, feel free to add a
-link : TypeScript componentsin _pages/index.vue_:
-: TypeScript components
+link : TypeScript components in _pages/index.vue_:
 
-```ht: TypeScript componentsml
-<temp: TypeScript componentslate>
+```html
+<template>
   <section class="container">
     <!-- put that wherever you want -->
     <nuxt-link to="/polls">Polls</nuxt-link>
@@ -408,7 +407,7 @@ Notes:
 
 - **Props usage**: Polls and votes are provided as _props_. Why? My rule of thumb
   is that components should not care if a list is properly loaded or not: it is
-  the responsibility ofthe appropriate page.
+  the responsibility of the appropriate page.
 - **Props decorator**: Please note the `@Prop` decorator usage. For people not comfortable with
   [_Class-Style Vue Components_](https://vuejs.org/v2/guide/typescript.html#Class-Style-Vue-Components),
   feel free to check the [Writing class based components with Vue.js and TypeScript](https://alligator.io/vuejs/typescript-class-components/)
@@ -481,7 +480,7 @@ export default class PollList extends Vue {
 ```
 
 Still following class style syntax, `data` are simply defined by class attributes.
-The usage of `undefined` is not recommended as data must be initialised to
+The usage of `undefined` is not recommended as data must be initialized to
 be reactive. Check the [Vue doc](https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties)
 for more information.
 
@@ -528,7 +527,7 @@ export default class Polls extends Vue {
 
 > Because [_non-null assertion operator_](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator)
 > is used, `this.polls` and `this.votes` cannot be left undefined. In a
-> pure TypeScript program, they would need to be initialised in the `constructor()`.
+> pure TypeScript program, they would need to be initialized in the `constructor()`.
 > The usage of `created()` over `mounted()` is simple: When `mounted()` is called,
 > HTML template is compiled but at this stage, both `this.polls` and `this.votes`
 > are still undefined. Consequently, they need to be defined earlier. To
@@ -577,7 +576,7 @@ ESLint would complain about having an empty interface so I switched it from
 #### Polls state
 
 That defined, we can define our poll state. Nothing fancy, it just reflects
-the needs of _pages/polls.vue_. _store/polls/types.ts_ is as simple as follow:
+the needs of _pages/polls.vue_. _store/polls/types.ts_ is as simple as follows:
 
 ```ts
 import { Poll, Vote } from '@/lib/polls/models';
@@ -588,7 +587,7 @@ export interface PollsState {
 }
 ```
 
-Such state is initialised as defined in _store/polls/state.ts_:
+Such state is initialized as defined in _store/polls/state.ts_:
 
 ```ts
 import { PollsState } from './types';
@@ -729,7 +728,7 @@ export const pollsModule = namespace('polls/');
 
 Now our state is ready, let's connect it to our page and components.
 
-_pages/polls.vue_ script is updated as follow:
+_pages/polls.vue_ script is updated as follows:
 
 ```diff
 import { Component, Vue } from 'nuxt-property-decorator';
@@ -775,7 +774,7 @@ export default class Polls extends Vue {
   the `load` action is also mapped
 - Lifecycle hook is `mounted` instead of `created`
 
-Because `votes` is initialised as an empty list, you should have the same
+Because `votes` is initialized as an empty list, you should have the same
 content at <http://localhost:3000/polls> except that no vote is displayed.
 
 Time to vote! Let's update _components/polls/PollDetail.vue_ script:
