@@ -4,9 +4,9 @@
 
     <div class="poll__choice--list">
       <div
-        class="poll__choice--container"
         v-for="choice in poll.choices"
         :key="choice.id"
+        class="poll__choice--container"
         @click="selectChoice(choice)"
       >
         <div class="poll__choice--box" :class="selectedChoiceClass(choice)">
