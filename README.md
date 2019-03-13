@@ -8,6 +8,9 @@ with Nuxt+TypeScript in a full application from scratch.
 
 - [01. Initialise Project](#initialise-project)
 - [02. Switch to TypeScript](#switch-to-typescript)
+  - [02.1 Adding nuxt-ts](#adding-nuxt-ts) 
+  - [02.2 Update Nuxt configuration](#update-configuration) 
+  - [02.3 Update existing code](#update-existing-code) 
 - [03. Code control: formatter and linter](#code-control-formatter-and-linter)
   - [03.1 Prettier](#prettier)
   - [03.2 ESLint](#eslint)
@@ -146,7 +149,7 @@ Renaming _nuxt.config.js_ into _nuxt.config.ts_. I simply change the first line:
 and commented out the `build: { ... }` content to avoid having a _"declared but never used"_
 and _"implicitly has an 'any' type"_ error
 
-## Update existing code
+### Update existing code
 
 The application scaffold is not much, only _pages/index.vue_ has to
 be updated:
