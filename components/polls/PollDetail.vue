@@ -2,15 +2,22 @@
   <div>
     <h3>{{ poll.topic }}</h3>
 
-    <div v-for="choice in poll.choices" :key="choice.id" @click="selectChoice(choice)">
-      <p>
-        <span v-if="choice.id === selectedChoiceId">[SELECTED]</span>
-        <span>Select {{ choice.text }} (count: {{ choice.count }})</span>
-      </p>
+    <div class="poll__choice--list">
+      <div
+        class="poll__choice--container"
+        v-for="choice in poll.choices"
+        :key="choice.id"
+        @click="selectChoice(choice)"
+      >
+        <div class="poll__choice--box" :class="selectedChoiceClass(choice)">
+          <span>Select {{ choice.text }}</span>
+          <span>({{ choice.count }} votes)</span>
+        </div>
+      </div>
     </div>
 
-    <div v-if="selectedChoiceId > 0">
-      <textarea v-model="comment"></textarea>
+    <div v-if="selectedChoiceId > 0" class="poll__vote">
+      <textarea v-model="comment" placeholder="Enter an optional comment here"></textarea>
       <button @click="voteChoice()">Vote!</button>
     </div>
   </div>
@@ -39,6 +46,13 @@ export default class PollList extends Vue {
   @pollsModule.Action('vote')
   private vote!: (choiceVote: ChoiceVote) => void;
 
+  /**
+   * get selected CSS class if the input choice is selected
+   */
+  public selectedChoiceClass(choice: Choice): string {
+    return this.selectedChoiceId === choice.id ? 'selected' : '';
+  }
+
   public selectChoice(choice: Choice): void {
     this.selectedChoiceId = choice.id;
   }
@@ -56,5 +70,71 @@ export default class PollList extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
+.poll__choice--list {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.poll__choice--container {
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  @include gt-sm {
+    width: 25%;
+  }
+}
+
+.poll__choice--box {
+  @extend %z-depth-1;
+  background-color: $colorPrimary;
+  color: #ddd;
+  padding: 1rem;
+  border: 1px solid $colorPrimaryDark;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+
+  span {
+    display: block;
+    text-align: center;
+  }
+  &:hover {
+    cursor: pointer;
+    @extend %z-depth-2;
+  }
+
+  &.selected {
+    @extend %z-depth-3;
+    background-color: $colorPrimaryDark;
+    color: #fff;
+  }
+}
+
+.poll__vote {
+  textarea {
+    width: calc(100% - 1rem);
+    margin: 0px 0.5rem;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+  button {
+    display: block;
+    margin: 1rem auto;
+    width: 50%;
+    max-width: 300px;
+    padding: 8px 0px;
+    background-color: $colorSecondary;
+    color: #ddd;
+    border: 1px solid $colorSecondaryDark;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $colorSecondaryDark;
+      color: #fff;
+    }
+  }
+}
 </style>
