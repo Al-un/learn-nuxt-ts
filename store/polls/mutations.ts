@@ -1,13 +1,11 @@
-import { MutationTree } from 'vuex';
-import { PollsState } from './types';
-import { Poll, Vote } from '@/lib/polls/models';
+import { PollsMutations } from './types';
 
-export const mutations: MutationTree<PollsState> = {
-  setPolls: (state, polls: Poll[]) => {
+export const mutations: PollsMutations = {
+  setPolls: (state, polls) => {
     state.polls = polls;
   },
 
-  vote: (state, vote: Vote) => {
+  vote: (state, vote) => {
     // add vote
     state.votes.push(vote);
 
