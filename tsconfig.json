@@ -2,7 +2,7 @@
   "extends": "@nuxt/typescript",
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["@types/node", "@nuxt/vue-app"],
+    "types": ["@types/node", "@nuxt/vue-app", "@types/jest"],
     // Vue decorators
     "experimentalDecorators": true,
     // to allow importing JSON

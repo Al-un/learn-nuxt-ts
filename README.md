@@ -1222,3 +1222,115 @@ the `choices()` computed properties:
 Now, votes display choice name:
 
 ![Voted](screenshots/05.03_votes_with_choices_name.png)
+
+## Testing
+
+> I consider unit testing as part of the code itself. Following Angular
+> folder structure, I like having my `.spec.ts` along with the tested
+> files. May you prefer to have a `tests/` folder at the root folder
+> or a `__tests__/` at each folder level, feel free to adapt this tutorial
+> to your taste.
+>
+> As for the mocks, I follow Jest convention by having a `__mocks__/` folder
+> at each folder level
+
+### Adding & configuring Jest
+
+Following dependencies will be used:
+
+- [Jest](https://jestjs.io/)
+
+  Our test runner. As we are using TypeScript, [`@types/jest`](https://www.npmjs.com/package/@types/jest)
+  is also added
+
+- [vue-jest](https://github.com/vuejs/vue-jest)
+
+  Jest transformer for our vue components
+
+- [vue-test-utils](https://vue-test-utils.vuejs.org/)
+
+  Vue official unit testing library. Equivalent of Enzyme for React
+
+- [ts-jest](https://github.com/kulshekhar/ts-jest)
+
+  TypeScript preprocessor for Jest
+
+- [babel-core](https://github.com/babel/babel-bridge)
+
+  Required for `vue-jest` ([StackOverflow link](https://stackoverflow.com/a/54689793/4906586))
+
+```sh
+yarn add --dev jest @types/jest vue-jest @vue/test-utils ts-jest babel-core@^7.0.0-bridge.0
+```
+
+Add Jest types in _tsconfig.json_:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["@types/node", "@nuxt/vue-app", "@types/jest"]
+  }
+}
+```
+
+Add a `test` script in _package.json_:
+
+```json
+{
+  "scripts": {
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate",
+    "test": "jest"
+  }
+}
+```
+
+Add a Jest configuration file, _jest.config.js_:
+
+```js
+module.exports = {
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+    // this line is optional and the tilde shortcut
+    // will not be used in this tutorial
+    '^~/(.*)$': '<rootDir>/$1'
+  },
+  transform: {
+    '^.+\\.ts?$': 'ts-jest',
+    '.*\\.(vue)$': 'vue-jest'
+  },
+  moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
+
+  collectCoverageFrom: [
+    'components/**/*.vue',
+    'layouts/**/*.vue',
+    'pages/**/*.vue',
+    'lib/**/*.ts',
+    'plugins/**/*.ts',
+    'store/**/*.ts'
+  ]
+};
+```
+
+For more detail: [Jest configuration documentation](https://jestjs.io/docs/en/configuration)
+
+> [`collectCoverageFrom`](https://jestjs.io/docs/en/cli#collectcoveragefrom-glob): we will
+> be using Jest coverage (which uses Istanbul behind the hoods). We are listing all folders
+> than have to be scanned for coverage so that files which do not have a corresponding
+> `.spec.ts` file are flagged as _non tested_ instead of being skipped.
+
+Finally, add a _ts-shim.d.ts_ at root level:
+
+```ts
+declare module '*.vue' {
+  import Vue from 'vue';
+  export default Vue;
+}
+```
+
+If this shim were missing, running tests against Vue components will trigger an
+error: `error TS2307: Cannot find module '{path to component}'.`. Kudos to
+[Beetaa](https://github.com/beetaa/) for
+[the solution](https://github.com/vuejs/vue/issues/5298#issuecomment-453343514)
