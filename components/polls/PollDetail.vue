@@ -30,7 +30,7 @@ import { Poll, Choice, ChoiceVote } from '@/lib/polls/models';
 import { pollsModule } from '@/store/polls/const';
 
 @Component({})
-export default class PollList extends Vue {
+export default class PollDetail extends Vue {
   /**
    * Optional comment
    */
