@@ -1,0 +1,76 @@
+# Global CircleCI used version
+version: 2.1
+
+# ------------------------------------------------------------------------------
+# Workflows
+# version is set at 2
+# ------------------------------------------------------------------------------
+workflows:
+  version: 2
+  full-flow:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+
+# ------------------------------------------------------------------------------
+# Executors: list of executing environments (requires version: 2.1)
+# https://circleci.com/docs/2.0/configuration-reference/#executors-requires-version-21
+# ------------------------------------------------------------------------------
+executors:
+  app-builder:
+    docker:
+      - image: circleci/node:11-browsers-legacy
+    working_directory: ~/repo
+
+# Jobs
+jobs:
+  # ---------- Building job
+  build:
+    executor: app-builder
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore dependencies
+          keys:
+            - nuxt-ts-dependencies-{{ checksum "package-lock.lock" }}
+      - run:
+          # https://docs.npmjs.com/cli/ci
+          name: Install Dependencies
+          command: npm ci
+      - save_cache:
+          name: Save dependencies
+          key: nuxt-ts-dependencies-{{ checksum "package-lock.lock" }}
+          paths:
+            - ~/repo/node_modules
+
+  # ---------- Testing job
+  test:
+    executor: app-builder
+    steps:
+      - checkout
+      # Cache should not have changed as "build" ran before. Just get it back
+      - restore_cache:
+          name: Restore dependencies
+          keys:
+            - nuxt-ts-dependencies-{{ checksum "package-lock.lock" }}
+      # Code Climate setup & initialise
+      - run:
+          name: Code Climate test-reporter setup
+          command: |
+            # download test reporter as a static binary
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+      # Testing configuration must be configured in package.json
+      - run:
+          name: Testing
+          command: npm run test --coverage --verbose --silent
+      # Code Climate sending report
+      - run:
+          name: Code Climate report
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
+            fi
