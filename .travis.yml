@@ -61,13 +61,11 @@ deploy:
       branch: master
       node_js: node
   # HEROKU
+  # https://devcenter.heroku.com/changelog-items/1557
   - provider: heroku
     api_key:
       secure: 'Kj3AzLHK0jBp7vK2vpF79tBKv4/4LsMsmxZVsKkjC5OleeNurYlj8r7eHtjE9/VDSk2iP6o1fUo6M/9xAFXckZ7pbZG/HyMyWvsvMClC4cnaLee+y9QhO0nYPuxVIWNCRy98f2zPVMBEx2j5/ZpOyfw+CZEjWslpZLCFecs96H/PCdxp6i+14H/E5HYFhEo6G5NkcN5xez21n91iSX2ypFddPfTC2N99exN58O5HjUAYbywWHNl7y/Qde3TCUJJJg08GrUZKudO8fsMSGss4p2PSIlCzctXrOEvcIUCKxzOxkl3YlLQQPOgLsb+rCtZ3e7rikJMkmBCSwDYMXytNF7McD8h7zK5JGpdzGiYNl+W3jpkEMN7tKk4RPrscZeSGrJ0ImqLMAzZnKHue0FKLPrHPAIcyYqnqhDLASwXFPmtB9MRknq/tOOFydOtoaBCAIj5t7lgqG+uk7lu9rhaKqqWgbrA27fBjqOSrX6Y/SbqB4FiRM/RyQPozxQTOcbsIf4YwDV3AukZxBoRhcLz6Euo51N+drGWruLOU+TG/uHM5j+It/KGC3LPYKaTbkqtWVvP2jwiCYBWb/cTgPl/jd7eQutZ2c/DYNrrit6f4Y9wLBMll6RvTaVf2OHzK/zcmfIJ0Ka4UwkgahrWHW/nh67RBVUeYUWvQDD1D6zNJpZE='
     app: nuxt-ts
-    run:
-      - 'npm run build'
-      - 'npm start'
     on:
       branch: master
       node_js: node
