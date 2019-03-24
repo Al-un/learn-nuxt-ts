@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { shallowMount, Wrapper, WrapperArray } from '@vue/test-utils';
 
 import PollDetail from './PollDetail.vue';
@@ -26,8 +27,8 @@ describe('PollDetail', () => {
   });
 
   describe('Choices', () => {
-    let choicesWrapper: WrapperArray<PollDetail>;
-    let choices: Wrapper<PollDetail>[];
+    let choicesWrapper: WrapperArray<Vue>;
+    let choices: Wrapper<Vue>[];
     beforeEach(() => {
       choicesWrapper = wrapper.findAll('.poll__choice--container');
       choices = choicesWrapper.wrappers;
