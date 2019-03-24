@@ -87,6 +87,3 @@ sw.*
 
 # VS Code config
 .vscode/
-
-# yarn
-yarn.lock
