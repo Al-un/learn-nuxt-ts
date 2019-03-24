@@ -5,16 +5,17 @@
   "author": "Al-un",
   "private": true,
   "scripts": {
-    "dev": "nuxt-ts",
-    "build": "nuxt-ts build",
+    "dev": "nuxt",
+    "build": "nuxt build",
     "test": "jest",
     "lint": "eslint . --ext .vue,.ts,.js",
-    "start": "nuxt-ts start",
-    "generate": "nuxt-ts generate"
+    "start": "nuxt start",
+    "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxt/typescript": "^2.5.1",
     "cross-env": "^5.2.0",
-    "nuxt-ts": "^2.4.5"
+    "nuxt": "^2.5.1"
   },
   "devDependencies": {
     "@nuxtjs/style-resources": "^0.1.2",

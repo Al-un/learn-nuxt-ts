@@ -1,10 +1,9 @@
 # Nuxt-TS: Nuxt application powered by TypeScript
 
-[Nuxt 2.4.0 release (Jan-2019)](https://dev.to/nuxt/nuxtjs-v240-is-out-typescript-smart-prefetching-and-more-18d)
-has pushed one step forward TypeScript integration into Nuxt. **Kudos to Nuxt team**.
-
 Half tutorial, half exploration, I want to check out how far I can get
 with Nuxt+TypeScript in a full application from scratch.
+
+**Table of contents**
 
 - [01. Initialise Project](#initialise-project)
 - [02. Switch to TypeScript](#switch-to-typescript)
@@ -28,6 +27,39 @@ with Nuxt+TypeScript in a full application from scratch.
   - [06.2 Testing Vuex](#vuex-testing)
   - [06.3 Testing Components](#components-testing)
   - [06.3 Coverage](#coverage)
+
+**Nuxt**
+
+- 22-Mar-2019: [Nuxt 2.5.0](https://github.com/nuxt/nuxt.js/releases/tag/v2.5.0)
+
+  `nuxt-ts` is not needed anymore. Nuxt Typescript support is done by adding
+  `@nuxt/typescript`
+
+  <detail>
+  Update from Nuxt 2.4.0 is done with:
+
+  ```sh
+  yarn remove nuxt-ts
+  yarn add nuxt @nuxt/typescript
+  rm -Rf node_modules/
+  rm yarn.lock
+  yarn
+  ```
+
+  As-of 24-Mar-2019, Nuxt version is 2.5.1.
+
+  Side-effect is that as-of Nuxt 2.5.1, Nuxt does not support `"extends": "@nuxt/typescript"`
+  and _tsconfig.json_ is initialized by Nuxt:
+
+  - `"resolveJsonModule": true` has to be added
+  - `"types": ["@types/node", "@nuxt/vue-app", "@types/jest"]` has `@types/jest` added back
+
+- 28-Jan-2019: [Nuxt 2.4.0](https://github.com/nuxt/nuxt.js/releases/tag/v2.4.0)
+
+  [Nuxt 2.4.0 release (Jan-2019)](https://dev.to/nuxt/nuxtjs-v240-is-out-typescript-smart-prefetching-and-more-18d)
+  has pushed one step forward TypeScript integration into Nuxt thanks to `nuxt-ts`
+
+  **Kudos to Nuxt team**.
 
 This tutorial has undergone a complete refactoring on March 2019. Old version
 is archived at the [`archive/2019-03-09_refactoring` branch](https://github.com/Al-un/nuxt-ts/tree/archive/2019-03-09_refactoring)
