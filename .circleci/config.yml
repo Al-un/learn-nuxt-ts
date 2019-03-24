@@ -13,6 +13,16 @@ workflows:
       - test:
           requires:
             - build
+      - pre-deploy-generate:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-surge:
+          requires:
+            - pre-deploy-generate
 
 # ------------------------------------------------------------------------------
 # Executors: list of executing environments (requires version: 2.1)
@@ -37,7 +47,6 @@ commands:
           name: Restore dependencies
           keys:
             - nuxt-ts-dependencies-{{ checksum "package-lock.json" }}
-
 
 # Jobs
 jobs:
@@ -80,3 +89,23 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               ./cc-test-reporter after-build --exit-code $?
             fi
+
+  # ---------- Pre-deploy: generate
+  pre-deploy-generate:
+    executor: app-builder
+    steps:
+      - load-repo
+      - run: npm run generate
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist
+
+  # ---------- Deploy: Surge
+  deploy-surge:
+    executor: app-builder
+    steps:
+      - load-repo
+      - attach_workspace:
+          at: ~/repo/
+      - run: ./node_modules/.bin/surge --project ~/repo/dist --domain nuxt-ts.surge.sh
