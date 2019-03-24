@@ -5,7 +5,8 @@ module.exports = {
   // https://eslint.org/docs/user-guide/configuring#specifying-environments
   env: {
     browser: true,
-    node: true
+    node: true,
+    jest: true
   },
 
   // https://eslint.org/docs/user-guide/configuring#specifying-parser
