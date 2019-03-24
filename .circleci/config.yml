@@ -13,19 +13,24 @@ workflows:
       - test:
           requires:
             - build
-      - pre-deploy-generate:
+      - pre-deploy:
           requires:
-            - test
+            - build
           filters:
             branches:
               only:
                 - master
       - deploy-surge:
           requires:
-            - pre-deploy-generate
+            - pre-deploy
+            - test
       - deploy-s3:
           requires:
-            - pre-deploy-generate
+            - pre-deploy
+            - test
+      - deploy-heroku:
+          requires:
+            - test
 
 # ------------------------------------------------------------------------------
 # Executors: list of executing environments (requires version: 2.1)
@@ -107,7 +112,7 @@ jobs:
             fi
 
   # ---------- Pre-deploy: generate
-  pre-deploy-generate:
+  pre-deploy:
     executor: app-builder
     steps:
       - load-repo
@@ -129,7 +134,7 @@ jobs:
   # ---------- Deploy: Surge
   deploy-s3:
     docker:
-        - image: circleci/python:2.7
+      - image: circleci/python:2.7
     steps:
       - attach_workspace:
           at: ~/repo/
@@ -137,3 +142,10 @@ jobs:
           from: ~/repo/dist
           to: 's3://nuxt-ts'
           arguments: '--recursive'
+
+  # ---------- Deploy: Heroku
+  deploy-heroku:
+    executor: app-builder
+    steps:
+      - load-repo
+      - run: echo 'TODO'
