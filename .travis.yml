@@ -1,0 +1,51 @@
+language: node_js
+node_js:
+  - '11.10.1' # Developping under this version
+  - 'node' # latest stable Node.js release
+cache:
+  directories:
+    - 'node_modules'
+
+env:
+  global:
+    # $GITHUB_TOKEN
+    - secure: 'Ch/ME8IZrX4k9y+sYQtsVNc/bQFyBdwJqH1LqLX2HcVYuxIDDEXaYUaef0wI28mhILe8SnAHit0kSTpO8NXirrlgwhwRr/3IwUDVZOutc9hNYheQgu1f6rx46iFC72/rRFpjA4lbgTcNKNdMZbo6ueboFgxY+rx4SXGylvqPiNO1+1kBjUYhRE1H2K9CrlFkgoNHkLjtANtPsWbKBUroJCdNowG2vgGvMgJGLe1i5kH8ibQTQ7XNotL58H/d37MswNV77Rv9lLYfumBbApgQ0MMOpS/WNpw+thS2pGROK0Y5Qq6Xn4nt+XARpEdsM533TsYzpdyzajakPPwy7L2IQV6F2x6kjGUEt1ZE840xtdVleXGJk+M0bl80iQ9JUazYapSdCbINzDdRElKfsb+DkCMIcMn5wYGyWJtsIcEplWaNyc68q3QdVHSqqR6GQuZwsS78E/q0AVsecPURNPJBCOjAAByPMJZogZ7ZD6SaYwfDotO9kBbz53yJpRh97x3lXWU3a9zH2S5kmZKlu0sd54tgwFejjtz5lm4x8kz011oGk9ByZ1U4WPnbHMhkP8tLcMcgUKxBU1616mrYHxVyZY479erBtk3LAqqhQ/0zzOk4peHUCZhd2uBByAkmDyhmSKtBihq6LS8pG2onPx5X4G2O+0an4UFfS+4Qdr/zwCo='
+    # SURGE_LOGIN
+    - secure: 'mqI2HZQFmym2VUOGn0F1BNYVdQdrSRzNR7z+q34kcXnzjAw1YUaMXOFUJV1/EiNJwOkh4sV/mY8x1MUQF6d2jLZNauzZA7xHfowHLKtvmH5OvJ28tioNiMX7xDD7fPSK5LCN9YYGRFMFSFuPOOLrW4DiqXq6OG2fAscqyps2xkA841nacrr7YOg6MBsvwwZBYnCzdr5pl4X7mOZDinMFcgad/W1ObKsVh9Z/VtRMkTp89m6eh2wUGzZOD6rMNRFNKW0cE5mi2+tvrusi4oI1ssWXg8wAA3eiFvHgiUA+uyRWySGekonY3yRqvjLyJrebZF/lgJ97zU3RknHKMu7a6w6fiNwqnusfXhN8tXevt/OtzikxzLOBLM8mOlyLYxCbYyDn6AqtO4mQXJKsQ7nF/EubB+rKQtLcxu+8JaqUvvh4alUoLjWTeg6RWT84/czTW4jO2GgHin3IzDg9kyzABHgDq04fMwD6RhFE1zS8rQJeb+aW8leSckLNXOOdh4I4FVEhGz0aK2eAuJ25HHQsDp0iuolOudIirVTjkDARBjTlOYmA4C6tK88PfqCxIP0xQmSd6jpH3V417hRYQ2qyJn03GFPB72sKMsH/+MHgBLRhHadi+CYoi32zg2mHg/16k6/Rej6B9kZpq845DurvYRVmghqCCeTnjDzHfncQOVo='
+    # SURGE_TOKEN
+    - secure: 'n5m9MHVKkTURwGnAZGvZ4sZLtENVHbNmLMbKlb7jQW2Ml8eJHHkoH7tVaeGzghYa0oQWU/wQfQnPtPXYp2Y1PmUHteT4EhndKaNHPvR88FhhCy3a/gbCEwX58zmLBxwMv3pOTstcGOBplpQr20aNhZH++hdlKWTZgLFZO09LooC8xLknVXrU/77vC9L44wfGq7mINCRwm5TSB1UOW82e38JKAvm+bZOv0KBZ7veu8eF/PtgPrlLEEdqYLdztAaevAqMTNrQ03V053PhYBO067soktrnO07te8KYtBwq6atnPUfB3fQVy5w/9qtWWXSda3D/xYaXkb02XzX/7aQA3oQ6+9AN+V7KCdMfWdi5EZYyU0L0MqBedSHBt+ixytBR+gcA7lTUUSihH10gZ/mii7SjRYDFTKpVQ5SOpcoB3lSrMLYc6St7EPdQX9KvhXbCeqKzF317ZN8bkNHHAD4RdkkSLT1SYlKibRhLWBLr8cKNsTh6Jb3iwT84JbAWWeK4zu/+Fz4Ge7zx1+76H9bEtKS/2RjX0lURGKka3in/ixItNlAyzrMDRiGaCvutpsuPvsmNgS/AMNNkofSRAldVKoWUntswM3Khc2TowBzqEh2uQLuYrE2h0Qrj8fkJwdZWj6Fk0xovr/Uu7te8eK/F5DKkgkPP8Mnr/deLWei1MZgs='
+    # CC_TEST_REPORTER_ID
+    - secure: 'f1SLhfyKPj9b03EMuw+t0GFAbLEKjyegcijbb9FkCVwIAAhAbKVU5Y2HgwPr8iKcAzwnO4sMmwZeUOvsA6v551cgKYI6aki6uq9yBNvudwxeMLj5va2KK/o67ibGhiOgCo5gOJ51VYHyJHDp+9COC07a9HXlvpWXs91DWraABW1kF4peCTGHWLzYx/d+uJ2G8wu9SVm0ZeP7kkBQPCVGuAC0G0qY5ojHoHSqFxG/1lZ+a1mjiY0Iox3HXRQYivydN+0fYD7FAVOwfmn3yQjTU4m4r5XRIw5Zjp7MwsqtBUpn+FHIw+cpz4yCHphgSH7jFMxyb11Fdbho5uLydOElrkioHBq5gRjT6UElJ2uI3SYgeUEhRpCmqUfAIynzvhZ3ebq0Cf6jtV0F9s3wxxCYGdPyCwvR8P0fMa1uykQUzVKwKqYnzaWCHpjHomkcFuZcFsnWKaSM5+g/LftkBFKWtX8IpnS9JkPffc0Y+1ZnULX5W0Nkgnhsngpv5qmNC49W88Hgvpv/WdcC6YgwowwjVJuKQhQWZNMjWKKQOETGlr8WRar/jmamHorlzed0n/FPiMKuAk/kfhCbKBUMxxWaGawbMFLCPja/wL7c6rgpZdthsK8B7mP+2dVdmI9GhYHtm5Uku07LVaa+dAd+vUAxrotYD0ax/OhZ+kxNwOu5P0Y='
+
+install:
+  # Code Climate: initialization
+  # note: simplecov and simplecov-console gems required
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+  # Dependencies
+  - yarn install
+
+script:
+  - yarn run test --coverage --verbose --silent
+
+after_script:
+  # Code Climate: sending report
+  - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
+
+before_deploy:
+  # build static site
+  - yarn generate
+  # build SSR
+  - yarn build
+  
+
+deploy:
+  # Surge configuration
+  - provider: surge
+    project: ./dist
+    domain: nuxt-ts.surge.sh
+    # Travis configuration
+    skip-cleanup: true
+    on:
+      branch: master
