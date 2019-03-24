@@ -27,7 +27,7 @@ install:
   - npm ci
 
 script:
-  - npm run test --coverage --verbose --silent
+  - npm run test -- --coverage --silent
 
 after_script:
   # Code Climate: sending report

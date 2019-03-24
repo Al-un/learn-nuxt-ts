@@ -72,11 +72,11 @@ jobs:
       # Testing configuration must be configured in package.json
       - run:
           name: Testing
-          command: npm run test --coverage --verbose --silent
+          command: npm run test -- --coverage --silent
       # Code Climate sending report
       - run:
           name: Code Climate report
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
+              ./cc-test-reporter after-build --exit-code $?
             fi
