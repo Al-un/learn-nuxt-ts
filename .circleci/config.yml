@@ -23,6 +23,9 @@ workflows:
       - deploy-surge:
           requires:
             - pre-deploy-generate
+      - deploy-s3:
+          requires:
+            - pre-deploy-generate
 
 # ------------------------------------------------------------------------------
 # Executors: list of executing environments (requires version: 2.1)
@@ -48,6 +51,19 @@ commands:
           keys:
             - nuxt-ts-dependencies-{{ checksum "package-lock.json" }}
 
+# ------------------------------------------------------------------------------
+# Orbs: pre-configuration (requires version: 2.1)
+# https://circleci.com/docs/2.0/using-orbs/
+# ------------------------------------------------------------------------------
+orbs:
+  # https://circleci.com/orbs/registry/orb/circleci/aws-s3
+  # Config via environment variables:
+  # https://circleci.com/orbs/registry/orb/circleci/aws-cli
+  aws-s3: circleci/aws-s3@1.0.4
+
+# ------------------------------------------------------------------------------
+# Jobs: list of workflow jobs
+# ------------------------------------------------------------------------------
 # Jobs
 jobs:
   # ---------- Building job
@@ -109,3 +125,15 @@ jobs:
       - attach_workspace:
           at: ~/repo/
       - run: ./node_modules/.bin/surge --project ~/repo/dist --domain nuxt-ts.surge.sh
+
+  # ---------- Deploy: Surge
+  deploy-s3:
+    docker:
+        - image: circleci/python:2.7
+    steps:
+      - attach_workspace:
+          at: ~/repo/
+      - aws-s3/copy:
+          from: ~/repo/dist
+          to: 's3://nuxt-ts'
+          arguments: '--recursive'
