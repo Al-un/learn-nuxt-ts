@@ -18,6 +18,8 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+# for Travis
+cc-test-reporter
 
 # nyc test coverage
 .nyc_output

@@ -36,9 +36,6 @@ after_script:
 before_deploy:
   # build static site
   - yarn generate
-  # build SSR
-  - yarn build
-  
 
 deploy:
   # Surge configuration
@@ -49,3 +46,31 @@ deploy:
     skip-cleanup: true
     on:
       branch: master
+      node_js: node
+  # AWS S3
+  - provider: s3
+    access_key_id:
+      secure: 'LTqnV85UF0/p8pPZm+6bRjGxpsiRFmSYuF0d0lF1DKMOiGfdiOUfZosAXHkaRilfASxRdlI4QF12BL7iq5h17zbgrlMVHF7VzmCHWGwf7tsuS0G7puV0npBSajD/7c2dQ2oOVp1GlI4zB9SUQco+CLk0TZdPrAxqpoJLs0ln+ti1PFxBBiB4pU/WP2vFob3JehZtN4hBhoHpjWDTqiyjRiF0B+f8jLUHPxvnjRoQfi/sdQs3No4Xx5tJ2IH34x6JSqJ3BidVcITaqLNCUNg6jm4aTZf/FTOIgCNO+hAfNr7GHXYilAFn6932GvrE0LIWo3DVrAX39T2ufyZIg7O79nimlusiV4Ss0y1qitbqRM2/hrYJ6hiA1wbEkjaA2Qc09cNNj7UsRtPvV029BTQQqfb7WFQZDtlRPfrd5urBalpu2rN34/gvDBu5ZNaIHDQbHRMt8jZZUZI78sIskJbBclydWKm53KX+6naRfI20HbMrI2akELo/vHx78evT1Nys6630aXwVKrTCcTjfm1dTVR65VFm8KlrD7l5KrJR/cPhdoT+buO3hiSQG6wCNqgr5ggCz6kjxyt78n/7vMXT6M52taD1Tp2e59onS2bwPt6FjOMSVUWGfuC4IhhmlpdjAQ+aSgz/sJdblHEGHLgmaMhiw78h0tTIydv2JwDOY7xU='
+    secret_access_key:
+      secure: 'gRsIII8gAfZBijpJ395pms7FEV9L5bnhoyZnEkfO2tWmJpFaUfl4ejBIeWDh8xZ9CN0I2VzFVsdCJQD9aGOG0B1ST4l2yDmpwTbuh35hdLSXz4X8v3CcmkRnHDjbIDpud07KYcZbsAo1hPlVkbEj8k3Eqa66/FechVcyavrsPF3eqIWOJkeAbTlGoeM2L64BqizUQQ6G5YpHyb4WsMwHzcv8Aidsf3SyV2LlpOax0DEDFtT0UlEquG9noGD03kAX79xBvhWq0EpNw8uXV/1Rc7ORdh+eOJikwyqyOEks3S/xugCvwX2WnxBFGTSesJD6BPg47bCJ8ckkVhYxCMXD2cCjNhYbepsPlFMuwOBpQtFTgTX8UAyL8ZKfdG9P8ql0ECmAK18OxGRskiXGytTfz0zF75Ab/UAhz/paQo+KdwTR85TPDX2BE53K2nTA6JKywIY0QFieHhUzEIDsHli9tN0eENqURsaC2NnfmbjdrysNY2ttbC8UZEs6ZXAuaKg0HrTWD8ofZWYFB5ZQDfwKID1FlCYUJqOSfEWoUTmxU7NWTCZ+ogJR8kBw4lhTp/o6m6tlzzpUJol/sNsOXVEkiLaZ8syWP+KsHM2of30fq1aXD8UwwWXZYwxdlD0c7w6Y48as3r7m4SmUz+n8a7LVRgsw9VEQxIhKDRLBnTITi0w='
+    bucket: nuxt-ts
+    region: eu-west-3
+    skip-cleanup: true
+    local_dir: dist
+    on:
+      branch: master
+      node_js: node
+  # HEROKU
+  - provider: heroku
+    api_key:
+      secure: 'Kj3AzLHK0jBp7vK2vpF79tBKv4/4LsMsmxZVsKkjC5OleeNurYlj8r7eHtjE9/VDSk2iP6o1fUo6M/9xAFXckZ7pbZG/HyMyWvsvMClC4cnaLee+y9QhO0nYPuxVIWNCRy98f2zPVMBEx2j5/ZpOyfw+CZEjWslpZLCFecs96H/PCdxp6i+14H/E5HYFhEo6G5NkcN5xez21n91iSX2ypFddPfTC2N99exN58O5HjUAYbywWHNl7y/Qde3TCUJJJg08GrUZKudO8fsMSGss4p2PSIlCzctXrOEvcIUCKxzOxkl3YlLQQPOgLsb+rCtZ3e7rikJMkmBCSwDYMXytNF7McD8h7zK5JGpdzGiYNl+W3jpkEMN7tKk4RPrscZeSGrJ0ImqLMAzZnKHue0FKLPrHPAIcyYqnqhDLASwXFPmtB9MRknq/tOOFydOtoaBCAIj5t7lgqG+uk7lu9rhaKqqWgbrA27fBjqOSrX6Y/SbqB4FiRM/RyQPozxQTOcbsIf4YwDV3AukZxBoRhcLz6Euo51N+drGWruLOU+TG/uHM5j+It/KGC3LPYKaTbkqtWVvP2jwiCYBWb/cTgPl/jd7eQutZ2c/DYNrrit6f4Y9wLBMll6RvTaVf2OHzK/zcmfIJ0Ka4UwkgahrWHW/nh67RBVUeYUWvQDD1D6zNJpZE='
+    app: nuxt-ts
+    run:
+      - 'yarn build'
+      - 'yarn start'
+    on:
+      branch: master
+      node_js: node
+
+notifications:
+  email: false
