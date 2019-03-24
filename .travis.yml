@@ -24,7 +24,7 @@ install:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
   # Dependencies
-  - npm install
+  - npm ci
 
 script:
   - npm run test --coverage --verbose --silent
