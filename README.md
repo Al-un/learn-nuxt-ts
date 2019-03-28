@@ -22,11 +22,13 @@ with Nuxt+TypeScript in a full application from scratch.
   - [05.1 SCSS](#scss)
   - [05.2 styling](#styling)
   - [05.3 filters](#filters)
-- [06. Testing](#Testing)
+- [06. Testing](#testing)
   - [06.1 Jest](#adding-and-configuring-jest)
   - [06.2 Testing Vuex](#vuex-testing)
   - [06.3 Testing Components](#components-testing)
   - [06.3 Coverage](#coverage)
+- [07. Deployment](#deployment)
+  - [07.1 Universal vs Pre-rendered vs SPA](#universal-vs-pre-rendered-vs-sPA)
 
 **Nuxt**
 
@@ -1577,3 +1579,328 @@ and you will have a nice output:
 Open _coverage/lcov-report/index.html_ to have a detail HTML report:
 
 ![HTML coverage](screenshots/06.02_html_report.png)
+
+## Deployment
+
+### Universal vs Pre-rendered vs SPA
+
+Nuxt offers three different ways to "build" our application
+(more on [Nuxt docs](https://nuxtjs.org/guide/commands#production-deployment)):
+
+- Universal, serving our app as an Node application
+- Pre-rendered, serving our app as a static website but with all routes pre-rendered
+- SPA, serving our app as a SPA website
+
+I will not use SPA here as pre-rendered does all the hard work to generate all routes
+for us, which is one of SPA weakness.
+
+To deploy an universal build:
+
+```sh
+yarn build
+yarn start
+```
+
+To deploy a pre-rendered build:
+
+```sh
+yarn generate
+# deploy /dist/ folder
+```
+
+You will find relevant documentation on [NuxtJS FAQ](https://nuxtjs.org/faq/). I have tested
+some deployments for my personal usage so I will cover these in the following paragraphs.
+
+### Surge
+
+[Surge](https://surge.sh/) is a very easy to use static website hosting accessible via
+CLI only, which is quite cool for continuous deployment.
+
+Install Surge:
+
+```sh
+# Install globally
+npm install --global surge
+# Add locally as a devDependency
+yarn add --dev surge
+```
+
+> For some reasons, I could not install Surge globally with yarn
+
+Then simply build and deploy a static website:
+
+```sh
+# Generate
+yarn generate
+# Deploy
+surge --project ./dist/
+```
+
+Output:
+
+```sh
+
+   Running as xxxx@xxxx.xxx (Student)
+
+        project: ./dist/
+         domain: lively-quiver.surge.sh
+         upload: [====================] 100% eta: 0.0s (12 files, 256921 bytes)
+            CDN: [====================] 100%
+             IP: 45.55.110.124
+
+   Success! - Published to lively-quiver.surge.sh
+```
+
+That's it!
+
+For more details, check:
+
+- [Nuxtjs doc](https://nuxtjs.org/faq/surge-deployment)
+- [Surge docs](https://surge.sh/help/)
+
+### AWS S3
+
+S3 bucket offers the possibility to host a static website ([AWS docs](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html)):
+
+- Go to your AWS management console
+- Create a S3 bucket and open it
+- Go to properties and enable _Static website hosting_
+- Make your bucket public by adding this _permissions > bucket policy_:
+
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "AddPerm",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": "s3:GetObject",
+        "Resource": "arn:aws:s3:::nuxt-ts/*"
+      }
+    ]
+  }
+  ```
+
+- Upload your _dist/_ content into your bucket
+
+For those who prefer to use AWS CLI:
+
+```sh
+# Create your bucket. Replace "nuxt-ts" with your bucket name
+aws s3 mb s3://nuxt-ts
+# Enable static website hosting with default values
+aws s3 website s3://nuxt-ts --index-document index.html --error-document error.html
+# Create a bucket policy files
+touch s3_policy.json
+# Edit accordingly. Use VS Code!
+vim s3_policy.json
+# Apply policy file to bucket
+aws s3api put-bucket-policy --bucket nuxt-ts --policy file://s3_policy.json
+# Generate and upload dist/ content
+yarn generate
+aws s3 cp dist/ s3://nuxt-ts --recursive
+# Tadaa!!
+firefox nuxt-ts.s3-website.eu-west-3.amazonaws.com
+```
+
+Docs references:
+
+- [Nuxtjs doc](https://nuxtjs.org/faq/deployment-aws-s3-cloudfront)
+- [`aws s3 mb`](https://docs.aws.amazon.com/cli/latest/reference/s3/mb.html)
+- [`aws s3 website`](https://docs.aws.amazon.com/cli/latest/reference/s3/website.html)
+- [`aws s3api put-bucket-policy`](https://docs.aws.amazon.com/cli/latest/reference/s3api/put-bucket-policy.html)
+- [`aws s3 cp`](https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html)
+
+### Heroku
+
+Configure first your _package.json_. By convention, Nuxt uses `build` and `start`
+scripts which is properly triggered by Heroku after a `git push`. For the sake of
+the tutorial, let's use Heroku specific hooks in _package.json_:
+
+```json
+"scripts": {
+    "build": "nuxt build", // this will not run
+    "heroku-postbuild": "nuxt build", // this will run instead
+    "start": "nuxt start" // this will run after a successful build
+  }
+```
+
+```sh
+# == no app == : create app
+heroku create nuxt-ts
+# == app exists ==: add remote
+heroku git:remote --app nuxt-ts
+# check your remotes
+git remote -v
+# configure your app
+heroku config:set NPM_CONFIG_PRODUCTION=false --app nuxt-ts
+heroku config:set HOST=0.0.0.0 --app nuxt-ts
+heroku config:set NODE_ENV=production --app nuxt-ts
+# simply push your desired branch to Heroku
+git push heroku master
+```
+
+Docs references:
+
+- [Nuxtjs doc](https://nuxtjs.org/faq/heroku-deployment)
+- [Using NodeJS with Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs#deploy-the-app)
+- [Customize build process](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process)
+- [Using Heroku CLI to deploy](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
+
+### Travis CI
+
+Thanks to providers, including those deployment into Travis is easy.
+Please check [_.travis.yml_](https://github.com/Al-un/learn-nuxt-ts/blob/master/.travis.yml) for
+the complete configuration file.
+
+When encrypting values, I prefer to copy paste the secured values into
+my _.travis.yml_ rather than having the CLI doing it for me because
+it sometimes breaks my formatting.
+
+#### Surge
+
+Configure Surge:
+
+```sh
+# Generate a token
+surge token
+# Encrypt SURGE_LOGIN
+travis encrypt "SURGE_LOGIN={your email}" --com -r {your Github user}/{your repo}
+# Encrypt SURGE_TOKEN
+travis encrypt "SURGE_TOKEN={your token}" --com -r {your Github user}/{your repo}
+```
+
+Then add a Surge provider to your _.travis.yml_:
+
+```yaml
+deploy:
+  - provider: surge
+    project: ./dist
+    domain: nuxt-ts.surge.sh # optional
+    skip-cleanup: true
+```
+
+Please check [Travis docs](https://docs.travis-ci.com/user/deployment/surge/) for more.
+
+#### AWS S3
+
+Similary to Surge, encrypt your _AccessKeyId_ and your _SecretAccessKey_. Then add the
+S3 provider:
+
+```yaml
+deploy:
+  - provider: s3
+    access_key_id:
+      secure: '...'
+    secret_access_key:
+      secure: '...'
+    bucket: nuxt-ts
+    region: eu-west-3
+    skip-cleanup: true
+    local_dir: dist
+```
+
+Don't forget to specify the bucket region and the folder (`local_dir`) to upload
+
+Please check [Travis docs](https://docs.travis-ci.com/user/deployment/s3/) for more.
+
+#### Heroku
+
+Encrypt your Heroku API key and add the Heroku provider:
+
+```yaml
+deploy:
+  - provider: heroku
+    api_key: secure: '...'
+    app: nuxt-ts
+    on:
+      branch: master
+      node_js: node
+```
+
+Please check [Travis docs](https://docs.travis-ci.com/user/deployment/heroku/) for more.
+
+### Circle CI
+
+When Travis is using _providers_, Circle CI uses _Orbs_. I will not
+focus on Circle CI orbs in this tutorial. Please check
+[_.circleci/config.yml_](https://github.com/Al-un/learn-nuxt-ts/blob/master/.circleci/config.yml)
+for the complete configuration
+
+#### Surge
+
+As mentioned earlier, you can either install Surge globally or as a _devDependency_.
+Having `SURGE_LOGIN` and `SURGE_TOKEN` environment variables defined, it is as
+simple as executing the `surge` command:
+
+```yaml
+jobs:
+  deploy-surge:
+    docker:
+      - image: circleci/node:11-browsers-legacy
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: npm ci
+      - run: npm run generate
+      - run: ./node_modules/.bin/surge --project ~/repo/dist --domain nuxt-ts.surge.sh
+```
+
+Reference: [Surge doc](https://surge.sh/help/integrating-with-circleci)
+
+#### AWS S3
+
+Circle CI offers a [S3 orb](https://circleci.com/orbs/registry/orb/circleci/aws-s3)
+to ease S3 deployment, especially regarding AWS CLI configuration. Three environments
+variables are needed:
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+
+Then, add the orb and execute it in a job:
+
+```yaml
+orbs:
+  aws-s3: circleci/aws-s3@1.0.4
+
+jobs:
+  deploy-s3:
+    docker:
+      - image: circleci/python:2.7
+    steps:
+      - checkout
+      - run: npm ci
+      - run: npm run generate
+      - aws-s3/copy:
+          from: ~/repo/dist
+          to: 's3://nuxt-ts'
+          arguments: '--recursive'
+```
+
+Reference: [Circle CI doc](https://circleci.com/docs/2.0/deployment-integrations/#aws)
+
+#### Heroku
+
+Configure first required environment variables:
+
+- `HEROKU_API_KEY`
+- `HEROKU_APP_NAME`
+
+Once done, deploying to Heroku is a simple `git push`:
+
+```yaml
+jobs:
+  deploy-heroku:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: Deploy Master to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+```
+
+Reference: [Circle CI doc](https://circleci.com/docs/2.0/deployment-integrations/#heroku)
