@@ -30,6 +30,7 @@ workflows:
             - test
       - deploy-heroku:
           requires:
+            - pre-deploy # not required actually
             - test
 
 # ------------------------------------------------------------------------------
@@ -145,7 +146,8 @@ jobs:
 
   # ---------- Deploy: Heroku
   deploy-heroku:
-    executor: app-builder
+    docker:
+      - image: buildpack-deps:trusty
     steps:
-      - load-repo
-      - run: echo 'TODO'
+      - checkout
+      - run: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
