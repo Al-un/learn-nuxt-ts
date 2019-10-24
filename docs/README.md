@@ -37,6 +37,9 @@ with Nuxt+TypeScript in a full application from scratch.
 
 **Nuxt**
 
+- 24-Oct-2019: [Nuxt 2.10.2](https://github.com/nuxt/nuxt.js/releases/tag/v2.10.2)
+ `@nuxt/typescript` has been externalized therefore the dependency has to be changed to `@nuxt/typescript-build` [nuxt typescript setup guide](https://typescript.nuxtjs.org/guide/setup.html#configuration)
+
 - 22-Mar-2019: [Nuxt 2.5.0](https://github.com/nuxt/nuxt.js/releases/tag/v2.5.0)
 
   `nuxt-ts` is not needed anymore. Nuxt Typescript support is done by adding
