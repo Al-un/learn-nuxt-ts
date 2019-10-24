@@ -35,7 +35,7 @@ module.exports = {
    ** Nuxt.js modules
    */
   modules: ['@nuxtjs/style-resources'],
-
+  buildModules: ['@nuxt/typescript-build'],
   /*
    ** Build configuration
    */
