@@ -1,17 +1,20 @@
-import pkg from './package.json';
-
-module.exports = {
+export default {
   mode: 'universal',
 
   /*
    ** Headers of the page
    */
   head: {
-    title: pkg.name,
+    titleTemplate: '%s - ' + process.env.npm_package_name,
+    title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      {
+        hid: 'description',
+        name: 'description',
+        content: process.env.npm_package_description || ''
+      }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
@@ -30,7 +33,14 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [],
-
+  /*
+   ** Nuxt.js dev-modules
+   */
+  buildModules: [
+    // Doc: https://github.com/nuxt-community/eslint-module
+    '@nuxtjs/eslint-module',
+    '@nuxt/typescript-build'
+  ],
   /*
    ** Nuxt.js modules
    */
@@ -51,9 +61,6 @@ module.exports = {
    * Style resources module configuration
    */
   styleResources: {
-    scss: [
-      './assets/scss/_variables.scss',
-      './assets/scss/_mixins.scss'
-    ]
+    scss: ['./assets/scss/_variables.scss', './assets/scss/_mixins.scss']
   }
 };
