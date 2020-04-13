@@ -1,9 +1,9 @@
+import _ from 'lodash';
+
+import { mock1 } from './__mocks__/state.mock';
 import { mutations } from '@/store/polls/mutations';
 import { PollsState } from '@/store/polls/types';
-import { mock1 } from './__mocks__/state.mock';
 import { Poll, Vote } from '@/lib/polls/models';
-
-import _ from 'lodash';
 
 let state: PollsState;
 

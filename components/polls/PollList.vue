@@ -2,16 +2,22 @@
   <div>
     <div>
       <h2>Polls</h2>
-      <poll-detail v-for="poll in polls" :key="'poll-'+poll.id" :poll="poll"/>
+      <poll-detail
+        v-for="poll in polls"
+        :key="'poll-' + poll.id"
+        :poll="poll"
+      />
     </div>
 
     <div>
       <h2>Votes</h2>
       <p>votes count: {{ votes.length }}</p>
-      <div v-for="vote in votes" :key="'vote-'+vote.id" class="poll__vote">
+      <div v-for="vote in votes" :key="'vote-' + vote.id" class="poll__vote">
         <span>#{{ vote.id }}:</span>
         <span>{{ vote.choiceId | choiceName(choices) }}</span>
-        <span v-if="vote.comment !== undefined && vote.comment.length > 0">({{ vote.comment }})</span>
+        <span v-if="vote.comment !== undefined && vote.comment.length > 0"
+          >({{ vote.comment }})</span
+        >
       </div>
     </div>
   </div>
@@ -20,8 +26,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-import { Poll, Vote, Choice } from '@/lib/polls/models';
 import PollDetail from './PollDetail.vue';
+import { Poll, Vote, Choice } from '@/lib/polls/models';
 
 @Component({
   components: {

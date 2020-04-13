@@ -2,6 +2,7 @@
  * A vote for a given choice
  */
 export class Vote {
+  // eslint-disable-next-line no-useless-constructor
   public constructor(
     public id: number,
     public choiceId: number,
@@ -15,7 +16,11 @@ export class Vote {
 export class Choice {
   public count: number;
 
-  public constructor(public id: number, public pollId: number, public text: string) {
+  public constructor(
+    public id: number,
+    public pollId: number,
+    public text: string
+  ) {
     this.count = 0;
   }
 }
@@ -26,7 +31,11 @@ export class Choice {
 export class Poll {
   public choices: Choice[];
 
-  public constructor(public id: number, public topic: string, choices?: Choice[]) {
+  public constructor(
+    public id: number,
+    public topic: string,
+    choices?: Choice[]
+  ) {
     this.choices = choices !== undefined ? choices : [];
   }
 }

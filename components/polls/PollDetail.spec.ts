@@ -65,7 +65,7 @@ describe('PollDetail', () => {
   });
 
   describe('when a choice a selected', () => {
-    let selectedChoiceId = poll.choices[1].id;
+    const selectedChoiceId = poll.choices[1].id;
     test('is visible when a choice is selected', () => {
       wrapper.setData({ selectedChoiceId });
 

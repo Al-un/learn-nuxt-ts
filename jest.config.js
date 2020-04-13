@@ -20,6 +20,6 @@ module.exports = {
     'pages/**/*.vue',
     'lib/**/*.ts',
     'plugins/**/*.ts',
-    'store/**/*.ts',
+    'store/**/*.ts'
   ]
 };
