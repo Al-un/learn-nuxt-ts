@@ -1,19 +1,26 @@
 <template>
   <section class="container">
     <div>
-      <logo/>
+      <logo />
       <h1 class="title">nuxt-ts</h1>
       <h2 class="subtitle">TypeScript powered Nuxt tutorial</h2>
       <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
+        <a href="https://nuxtjs.org/" target="_blank" class="button--green"
+          >Documentation</a
+        >
+        <a
+          href="https://github.com/nuxt/nuxt.js"
+          target="_blank"
+          class="button--grey"
+          >GitHub</a
+        >
       </div>
     </div>
     <nuxt-link to="/polls">Polls</nuxt-link>
   </section>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 
 import Logo from '@/components/Logo.vue';

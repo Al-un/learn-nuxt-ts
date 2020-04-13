@@ -1,8 +1,8 @@
+import { mock1 } from './__mocks__/state.mock';
 import { actions } from '@/store/polls/actions';
 import { PollsState, PollActionContext } from '@/store/polls/types';
 import * as api from '@/lib/polls/api';
 import { Vote } from '@/lib/polls/models';
-import { mock1 } from './__mocks__/state.mock';
 
 let actionCxt: PollActionContext;
 let commit: jest.Mock;

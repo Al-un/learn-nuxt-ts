@@ -1,6 +1,6 @@
-import { Poll, Vote, ChoiceVote } from '@/lib/polls/models';
 import { ActionTree, ActionContext, MutationTree, GetterTree } from 'vuex';
 import { RootState } from '../types';
+import { Poll, Vote, ChoiceVote } from '@/lib/polls/models';
 
 export interface PollsState {
   polls: Poll[];

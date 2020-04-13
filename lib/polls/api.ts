@@ -30,6 +30,7 @@ const DUMMY_POLLS: Poll[] = [
  *
  * It uses a timeout to simulate server response time
  */
+// eslint-disable-next-line require-await
 export const loadPolls = async (): Promise<Poll[]> => {
   return new Promise<Poll[]>(resolve =>
     setTimeout(() => resolve(DUMMY_POLLS), 500)

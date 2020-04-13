@@ -1,4 +1,4 @@
-import { PollsState} from './types';
+import { PollsState } from './types';
 
 /**
  * Poll state initialiser

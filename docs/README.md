@@ -37,21 +37,150 @@ with Nuxt+TypeScript in a full application from scratch.
 
 **Nuxt**
 
+- 13-Apr-2020: switch Nuxt official TypeScript support: https://typescript.nuxtjs.org/. Migration method is described here: https://typescript.nuxtjs.org/migration.html.
+
+  <details>
+
+    <summary>Update steps</summary>
+
+    Update dependencies
+    ```sh
+    # Bump node-sass
+    rm -Rf node_modules
+    rm package-lock.json
+    npm uninstall node-sass
+    npm install node-sass
+
+    # Remove nuxt dependencies
+    npm uninstall @nuxt/typescript nuxt nuxt-property-decorator
+    # Ensure that we have at least nuxt 2.9.x
+    npm install nuxt
+    # Bump property decorator
+    npm install nuxt-property-decorator
+    # Upgrade
+    npm install --save-dev @nuxt/typescript-build
+    # Add TypeScript runtime configuration for nuxt-property-decorator
+    # https://github.com/nuxt-community/nuxt-property-decorator/issues/62#issuecomment-577601678
+    npm install @nuxt/typescript-runtime
+
+    # Update linting
+    npm uninstall @typescript-eslint/eslint-plugin
+    npm install --save-dev @nuxtjs/eslint-module
+    npm install --save-dev @nuxtjs/eslint-config-typescript
+    npm uninstall eslint-plugin-vue
+    npm install --save-dev eslint-plugin-nuxt eslint-plugin-prettier
+    ```
+
+    Update `nuxt.config.js`:
+
+    ```diff
+    - import pkg from './package.json';
+
+    - module.exports = {
+    + export default {
+
+    -     title: pkg.name,
+    +     titleTemplate: '%s - ' + process.env.npm_package_name,
+    +     title: process.env.npm_package_name || '',
+
+    -      { hid: 'description', name: 'description', content: pkg.description }
+    +      {
+    +        hid: 'description',
+    +        name: 'description',
+    +        content: process.env.npm_package_description || ''
+    +      }
+
+    +  /*
+    +   ** Nuxt.js dev-modules
+    +   */
+    +  buildModules: [
+    +    // Doc: https://github.com/nuxt-community/eslint-module
+    +    '@nuxtjs/eslint-module',
+    +    '@nuxt/typescript-build'
+    +  ],
+    ```
+
+    Update `tsconfig.json`
+
+    ```diff
+    -      "@nuxt/vue-app",
+    +      "@nuxt/types",
+    ```
+
+    Update `.eslintrc.js`:
+
+    ```diff
+    -  // https://eslint.org/docs/user-guide/configuring#specifying-parser
+    -  parser: 'vue-eslint-parser',
+    -  // https://vuejs.github.io/eslint-plugin-vue/user-guide/#faq
+    -  parserOptions: {
+    -    parser: '@typescript-eslint/parser',
+    -    ecmaVersion: 2017,
+    -    sourceType: 'module',
+    -    project: './tsconfig.json'
+    -  },
+    -
+    -  // https://eslint.org/docs/user-guide/configuring#extending-configuration-files
+    -  // order matters: from least important to most important in terms of overriding
+    -  // Prettier + Vue: https://medium.com/@gogl.alex/how-to-properly-set-up-eslint-with-prettier-for-vue-or-nuxt-in-vscode-e42532099a9c
+      extends: [
+    -    'eslint:recommended',
+    -    'plugin:@typescript-eslint/recommended',
+    -    'plugin:vue/recommended',
+    -    'prettier',
+    -    'prettier/vue',
+    -    'prettier/@typescript-eslint'
+    +    '@nuxtjs',
+    +    '@nuxtjs/eslint-config-typescript',
+    +    'prettier',
+    +    'prettier/vue',
+    +    'plugin:prettier/recommended',
+    +    'plugin:nuxt/recommended'
+      ],
+    -  
+    -  // https://eslint.org/docs/user-guide/configuring#configuring-plugins
+    -  plugins: ['vue', '@typescript-eslint'],
+
+    +  plugins: ['prettier'],
+    ```
+
+    Update `package.json` for runtime
+
+    ```diff
+      "scripts": {
+    -    "dev": "nuxt",
+    +    "dev": "nuxt-ts",
+    -    "build": "nuxt build",
+    +    "build": "nuxt-ts build",
+    -    "heroku-postbuild": "nuxt build",
+    +    "heroku-postbuild": "nuxt-ts build",
+        "test": "jest",
+        "lint": "eslint . --ext .vue,.ts,.js",
+    -    "start": "nuxt start",
+    +    "start": "nuxt-ts start",
+    -    "generate": "nuxt generate"
+    +    "generate": "nuxt-ts generate"
+      },
+    ```
+  </details>
+
 - 22-Mar-2019: [Nuxt 2.5.0](https://github.com/nuxt/nuxt.js/releases/tag/v2.5.0)
 
   `nuxt-ts` is not needed anymore. Nuxt Typescript support is done by adding
   `@nuxt/typescript`
 
-  <detail>
-  Update from Nuxt 2.4.0 is done with:
+  <details>
 
-  ```sh
-  yarn remove nuxt-ts
-  yarn add nuxt @nuxt/typescript
-  rm -Rf node_modules/
-  rm yarn.lock
-  yarn
-  ```
+    <summary>Update from Nuxt 2.4.0 is done with:</summary>
+
+    ```sh
+    yarn remove nuxt-ts
+    yarn add nuxt @nuxt/typescript
+    rm -Rf node_modules/
+    rm yarn.lock
+    yarn
+    ```
+  </details>
 
   As-of 24-Mar-2019, Nuxt version is 2.5.1.
 

@@ -1,8 +1,8 @@
 <template>
-  <poll-list v-if="polls.length" :polls="polls" :votes="votes"/>
+  <poll-list v-if="polls.length" :polls="polls" :votes="votes" />
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 
 import PollList from '@/components/polls/PollList.vue';
@@ -17,6 +17,7 @@ import { pollsModule } from '@/store/polls/const';
 export default class Polls extends Vue {
   @pollsModule.State('polls')
   public polls!: Poll[];
+
   @pollsModule.State('votes')
   public votes!: Vote[];
 
@@ -29,5 +30,4 @@ export default class Polls extends Vue {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -17,7 +17,10 @@
     </div>
 
     <div v-if="selectedChoiceId > 0" class="poll__vote">
-      <textarea v-model="comment" placeholder="Enter an optional comment here"></textarea>
+      <textarea
+        v-model="comment"
+        placeholder="Enter an optional comment here"
+      ></textarea>
       <button @click="voteChoice()">Vote!</button>
     </div>
   </div>
